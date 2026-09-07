@@ -1,0 +1,5 @@
+# Lo que NO debe viajar en el ZIP que se entrega al cliente.
+README.md       export-ignore
+.gitignore      export-ignore
+.gitattributes  export-ignore
+.github/        export-ignore

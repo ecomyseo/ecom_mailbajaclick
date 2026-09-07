@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ecom_mailbajaclick" source-language="en-US" target-language="es-ES" datatype="plaintext">
+    <body>
+      <trans-unit id="581c14d1cbb9c750a71258978fb68076" resname="%s has been subscribed again.">
+        <source>%s has been subscribed again.</source>
+        <target>%s vuelve a estar suscrito.</target>
+      </trans-unit>
+      <trans-unit id="0938f8d7949816f0dca4e65d7c398542" resname="0 means it never expires, which is the recommended setting.">
+        <source>0 means it never expires, which is the recommended setting.</source>
+        <target>0 significa que no caduca nunca, que es lo recomendable.</target>
+      </trans-unit>
+      <trans-unit id="15753eedf7ae1df7474fcf39c04ff05a" resname="A mailbox you actually read, for example bajas@yourshop.com.">
+        <source>A mailbox you actually read, for example bajas@yourshop.com.</source>
+        <target>Un buzón que leas de verdad, por ejemplo bajas@tutienda.com.</target>
+      </trans-unit>
+      <trans-unit id="aa8d2f8568f9f916a599935c0d2bd953" resname="A new version is available">
+        <source>A new version is available</source>
+        <target>Hay una versión nueva disponible</target>
+      </trans-unit>
+      <trans-unit id="a6e52c7fed4ff1971d477db58d3c946a" resname="Add a visible unsubscribe link at the bottom of the email">
+        <source>Add a visible unsubscribe link at the bottom of the email</source>
+        <target>Añadir un enlace de baja visible al pie del correo</target>
+      </trans-unit>
+      <trans-unit id="3205a8c4cae989d61e5348948f54b18a" resname="Add the unsubscribe headers">
+        <source>Add the unsubscribe headers</source>
+        <target>Añadir las cabeceras de baja</target>
+      </trans-unit>
+      <trans-unit id="c7595ad17881bf225c5508f9ff9aca5c" resname="Adds a second address to the header for clients that do not support the web link.">
+        <source>Adds a second address to the header for clients that do not support the web link.</source>
+        <target>Añade una segunda dirección a la cabecera para los programas que no admiten el enlace web.</target>
+      </trans-unit>
+      <trans-unit id="a84d325ee57dc160d1993c092c7a86c1" resname="Adds the List-Unsubscribe and List-Unsubscribe-Post headers that Gmail, Yahoo and Outlook require on commercial email, and handles the one-click unsubscribe.">
+        <source>Adds the List-Unsubscribe and List-Unsubscribe-Post headers that Gmail, Yahoo and Outlook require on commercial email, and handles the one-click unsubscribe.</source>
+        <target>Añade las cabeceras List-Unsubscribe y List-Unsubscribe-Post que Gmail, Yahoo y Outlook exigen al correo comercial, y atiende la baja en un clic.</target>
+      </trans-unit>
+      <trans-unit id="9b6545e4cea9b4ad4979d41bb9170e2b" resname="Advanced">
+        <source>Advanced</source>
+        <target>Avanzado</target>
+      </trans-unit>
+      <trans-unit id="148963c173b56b1c9abd71598272d3b2" resname="All the required hooks are registered.">
+        <source>All the required hooks are registered.</source>
+        <target>Todos los puntos de enganche necesarios están registrados.</target>
+      </trans-unit>
+      <trans-unit id="e7857eac163451890b41e0615d49326f" resname="Also offer unsubscribe by email (mailto)">
+        <source>Also offer unsubscribe by email (mailto)</source>
+        <target>Ofrecer también la baja por correo (mailto)</target>
+      </trans-unit>
+      <trans-unit id="e4c55fa07def8aa395492c6eec7325c6" resname="Answers correctly (HTTP %d).">
+        <source>Answers correctly (HTTP %d).</source>
+        <target>Responde correctamente (HTTP %d).</target>
+      </trans-unit>
+      <trans-unit id="cd353f9a1feabb080b9df6376552f288" resname="Are you sure? The unsubscribe log will be deleted and your emails will stop carrying the unsubscribe headers.">
+        <source>Are you sure? The unsubscribe log will be deleted and your emails will stop carrying the unsubscribe headers.</source>
+        <target>¿Seguro? Se borrará el registro de bajas y tus correos dejarán de llevar las cabeceras de baja.</target>
+      </trans-unit>
+      <trans-unit id="325fd71d14f32e0be5b5ea1fd5af4349" resname="Click a name to add it to the list above.">
+        <source>Click a name to add it to the list above.</source>
+        <target>Pulsa un nombre para añadirlo a la lista de arriba.</target>
+      </trans-unit>
+      <trans-unit id="f3b9606b56d407bcca0e36325501a6ad" resname="Contact support to update the module.">
+        <source>Contact support to update the module.</source>
+        <target>Ponte en contacto con soporte para actualizar el módulo.</target>
+      </trans-unit>
+      <trans-unit id="9ad7abec7cee2ffc2dc6eb618f0842f4" resname="Could not reach the URL: %s">
+        <source>Could not reach the URL: %s</source>
+        <target>No se ha podido alcanzar la URL: %s</target>
+      </trans-unit>
+      <trans-unit id="44749712dbec183e983dcd78a7736c41" resname="Date">
+        <source>Date</source>
+        <target>Fecha</target>
+      </trans-unit>
+      <trans-unit id="2ff5502a190d84615ee0637766f8402b" resname="Days the unsubscribe link stays valid">
+        <source>Days the unsubscribe link stays valid</source>
+        <target>Días que el enlace de baja sigue siendo válido</target>
+      </trans-unit>
+      <trans-unit id="62304b905df8438b366cf0cb0b2bff3e" resname="Deactivate the subscription of guests (ps_emailsubscription)">
+        <source>Deactivate the subscription of guests (ps_emailsubscription)</source>
+        <target>Desactivar la suscripción de los invitados (ps_emailsubscription)</target>
+      </trans-unit>
+      <trans-unit id="cd92e21218612817d52a8d71c32faf38" resname="Debug log">
+        <source>Debug log</source>
+        <target>Registro de depuración</target>
+      </trans-unit>
+      <trans-unit id="d71bd2c12a0a341f60b417e3c6a99be3" resname="Download the log as CSV">
+        <source>Download the log as CSV</source>
+        <target>Descargar el registro en CSV</target>
+      </trans-unit>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30" resname="Email address">
+        <source>Email address</source>
+        <target>Dirección de correo</target>
+      </trans-unit>
+      <trans-unit id="33d37e5d16943490fd3f9751e65887a0" resname="Empty the debug log">
+        <source>Empty the debug log</source>
+        <target>Vaciar el registro de depuración</target>
+      </trans-unit>
+      <trans-unit id="d032af802f88bfa4ba5235d73160b878" resname="Every email">
+        <source>Every email</source>
+        <target>Todos los correos</target>
+      </trans-unit>
+      <trans-unit id="0a1a308141263b62547c50c7605e677e" resname="Every email except the templates listed below">
+        <source>Every email except the templates listed below</source>
+        <target>Todos los correos menos las plantillas de la lista de abajo</target>
+      </trans-unit>
+      <trans-unit id="5b089010051140bc9ff82beb1c5f954b" resname="Every unsubscribe is written to a table of the module with the date, the IP address and the template it came from, and it can be downloaded as CSV.">
+        <source>Every unsubscribe is written to a table of the module with the date, the IP address and the template it came from, and it can be downloaded as CSV.</source>
+        <target>Cada baja se guarda en una tabla del módulo con la fecha, la dirección IP y la plantilla de la que vino, y se puede descargar en CSV.</target>
+      </trans-unit>
+      <trans-unit id="9a27bc5bf15ccf20ab03bd81a7a6b677" resname="Everything is ready: your emails carry the unsubscribe headers.">
+        <source>Everything is ready: your emails carry the unsubscribe headers.</source>
+        <target>Todo listo: tus correos llevan las cabeceras de baja.</target>
+      </trans-unit>
+      <trans-unit id="ae68c7d78a4135cf3d9790ef9f176cdf" resname="Footer text">
+        <source>Footer text</source>
+        <target>Texto del pie</target>
+      </trans-unit>
+      <trans-unit id="7bbc2026ab58649855e20dbc5c42189e" resname="Force HTTPS in the unsubscribe link">
+        <source>Force HTTPS in the unsubscribe link</source>
+        <target>Forzar HTTPS en el enlace de baja</target>
+      </trans-unit>
+      <trans-unit id="1dec4f55522b828fe5dacf8478021a9e" resname="Friendly URL">
+        <source>Friendly URL</source>
+        <target>URL amigable</target>
+      </trans-unit>
+      <trans-unit id="f8a863b1fd24ee75258508e213663cbf" resname="Friendly URL path">
+        <source>Friendly URL path</source>
+        <target>Ruta de la URL amigable</target>
+      </trans-unit>
+      <trans-unit id="e0bce90cb9ca9d002a652a27eb8db7d0" resname="Full URL of your own page. Leave it empty to use the page built into the module.">
+        <source>Full URL of your own page. Leave it empty to use the page built into the module.</source>
+        <target>URL completa de tu propia página. Déjalo vacío para usar la página del módulo.</target>
+      </trans-unit>
+      <trans-unit id="0db377921f4ce762c62526131097968f" resname="General">
+        <source>General</source>
+        <target>General</target>
+      </trans-unit>
+      <trans-unit id="26a110235d7c2c90202e909edf9afb45" resname="Generate a new signing key">
+        <source>Generate a new signing key</source>
+        <target>Generar una clave de firma nueva</target>
+      </trans-unit>
+      <trans-unit id="b9c37d143d075317a1caf4ba7a583ddc" resname="Gmail only accepts one-click unsubscribe over HTTPS.">
+        <source>Gmail only accepts one-click unsubscribe over HTTPS.</source>
+        <target>Gmail solo acepta la baja en un clic por HTTPS.</target>
+      </trans-unit>
+      <trans-unit id="f3aeb5721ab4de7c1cf93b11d849a8f3" resname="Gmail only accepts one-click unsubscribe over HTTPS. Enable SSL in the shop or turn on &quot;Force HTTPS&quot;.">
+        <source>Gmail only accepts one-click unsubscribe over HTTPS. Enable SSL in the shop or turn on "Force HTTPS".</source>
+        <target>Gmail solo acepta la baja en un clic por HTTPS. Activa el SSL de la tienda o marca «Forzar HTTPS».</target>
+      </trans-unit>
+      <trans-unit id="cdd41c7a15165e5d4a6fdf5bcb8e111d" resname="Gmail, Yahoo and Outlook demand that commercial email carries a List-Unsubscribe header and, since 2024, a List-Unsubscribe-Post header so their &quot;Unsubscribe&quot; button works without the reader leaving the mailbox (RFC 8058). Without it your messages lose reputation and end up in the spam folder.">
+        <source>Gmail, Yahoo and Outlook demand that commercial email carries a List-Unsubscribe header and, since 2024, a List-Unsubscribe-Post header so their "Unsubscribe" button works without the reader leaving the mailbox (RFC 8058). Without it your messages lose reputation and end up in the spam folder.</source>
+        <target>Gmail, Yahoo y Outlook exigen que el correo comercial lleve una cabecera List-Unsubscribe y, desde 2024, una cabecera List-Unsubscribe-Post para que su botón «Darse de baja» funcione sin que el lector salga del buzón (RFC 8058). Sin eso, tus mensajes pierden reputación y acaban en la carpeta de correo no deseado.</target>
+      </trans-unit>
+      <trans-unit id="3c243d1a365d6645940e54abfb98da76" resname="HTTPS is mandatory. Over plain HTTP the module still adds List-Unsubscribe, but not the one-click part, because the mailboxes reject it.">
+        <source>HTTPS is mandatory. Over plain HTTP the module still adds List-Unsubscribe, but not the one-click part, because the mailboxes reject it.</source>
+        <target>El HTTPS es obligatorio. Por HTTP el módulo sigue añadiendo List-Unsubscribe, pero no la parte de un clic, porque los buzones la rechazan.</target>
+      </trans-unit>
+      <trans-unit id="de5e0fbad51d6484d1b3eab5c6d277ca" resname="Headers enabled">
+        <source>Headers enabled</source>
+        <target>Cabeceras activadas</target>
+      </trans-unit>
+      <trans-unit id="2a37e42d684c600572b691c966c06011" resname="Help / how it works">
+        <source>Help / how it works</source>
+        <target>Ayuda / cómo funciona</target>
+      </trans-unit>
+      <trans-unit id="645795691b995b1c2ecd09698aed1b02" resname="Hooks connected">
+        <source>Hooks connected</source>
+        <target>Puntos de enganche conectados</target>
+      </trans-unit>
+      <trans-unit id="75ba8d70e3692ba200f0e0df37b4d2ae" resname="IP address">
+        <source>IP address</source>
+        <target>Dirección IP</target>
+      </trans-unit>
+      <trans-unit id="91ec09ad62e1e2fa5e722866b2e009e7" resname="Log files deleted: %d">
+        <source>Log files deleted: %d</source>
+        <target>Ficheros de registro borrados: %d</target>
+      </trans-unit>
+      <trans-unit id="01bf289bfa1a2f713904cd00d692451b" resname="Master switch of the module.">
+        <source>Master switch of the module.</source>
+        <target>Interruptor general del módulo.</target>
+      </trans-unit>
+      <trans-unit id="be90a6eb1536ad54649bfc1c47c272ab" resname="Missing hooks: %s">
+        <source>Missing hooks: %s</source>
+        <target>Faltan estos puntos de enganche: %s</target>
+      </trans-unit>
+      <trans-unit id="04bbfedffb98e2e7a341634eae378ff4" resname="Module templates">
+        <source>Module templates</source>
+        <target>Plantillas de módulos</target>
+      </trans-unit>
+      <trans-unit id="550ef5c0979fb83a28836d75f8d34034" resname="New secret key generated. The unsubscribe links sent in previous emails are no longer valid.">
+        <source>New secret key generated. The unsubscribe links sent in previous emails are no longer valid.</source>
+        <target>Se ha generado una clave nueva. Los enlaces de baja enviados en correos anteriores ya no sirven.</target>
+      </trans-unit>
+      <trans-unit id="bafd7322c6e97d25b6299b5d6fe8920b" resname="No">
+        <source>No</source>
+        <target>No</target>
+      </trans-unit>
+      <trans-unit id="c4afe992b036e51c8929461e121f895e" resname="No email template was found.">
+        <source>No email template was found.</source>
+        <target>No se ha encontrado ninguna plantilla de correo.</target>
+      </trans-unit>
+      <trans-unit id="f9b31e4b6a3ea732e4ecb1024abadcd7" resname="No signing key. Save the settings to generate one.">
+        <source>No signing key. Save the settings to generate one.</source>
+        <target>No hay clave de firma. Guarda la configuración para generar una.</target>
+      </trans-unit>
+      <trans-unit id="5c04b26f3f0e8470f11c381f7617d620" resname="Nobody has unsubscribed yet.">
+        <source>Nobody has unsubscribed yet.</source>
+        <target>Todavía no se ha dado de baja nadie.</target>
+      </trans-unit>
+      <trans-unit id="8832174e1d53c8b10c04a68a7ed5d387" resname="One per line. The * wildcard is allowed.">
+        <source>One per line. The * wildcard is allowed.</source>
+        <target>Una por línea. Se admite el comodín *.</target>
+      </trans-unit>
+      <trans-unit id="12b6526e1dd65f89aac2c8446943ef44" resname="Only letters, digits, hyphens and slashes.">
+        <source>Only letters, digits, hyphens and slashes.</source>
+        <target>Solo letras, cifras, guiones y barras.</target>
+      </trans-unit>
+      <trans-unit id="031a94a70dd476d1914190bfa1832a64" resname="Only relevant on a multistore installation.">
+        <source>Only relevant on a multistore installation.</source>
+        <target>Solo importa en una instalación multitienda.</target>
+      </trans-unit>
+      <trans-unit id="ef3404fbe531db15e0b708e0ee425e0f" resname="Only the templates listed below">
+        <source>Only the templates listed below</source>
+        <target>Solo las plantillas de la lista de abajo</target>
+      </trans-unit>
+      <trans-unit id="de437cf94bbcd30f2126afd3018d9089" resname="Open the URL to check that your server answers it; download the CSV to keep proof of every unsubscribe.">
+        <source>Open the URL to check that your server answers it; download the CSV to keep proof of every unsubscribe.</source>
+        <target>Abre la URL para comprobar que tu servidor responde; descárgate el CSV para guardar constancia de cada baja.</target>
+      </trans-unit>
+      <trans-unit id="390bfab6bbc50e447fb2caea9f3c0279" resname="Open the unsubscribe URL">
+        <source>Open the unsubscribe URL</source>
+        <target>Abrir la URL de baja</target>
+      </trans-unit>
+      <trans-unit id="24d8927fa03786875f9600ad02a2b5f2" resname="Other modules can react to an unsubscribe through the actionEcomMailbajaclickUnsubscribe hook, for example to propagate it to Mailchimp or Brevo.">
+        <source>Other modules can react to an unsubscribe through the actionEcomMailbajaclickUnsubscribe hook, for example to propagate it to Mailchimp or Brevo.</source>
+        <target>Otros módulos pueden reaccionar a una baja con el punto de enganche actionEcomMailbajaclickUnsubscribe, por ejemplo para propagarla a Mailchimp o Brevo.</target>
+      </trans-unit>
+      <trans-unit id="f7af4414f6ef5acbea7a57165784d51a" resname="PrestaShop templates">
+        <source>PrestaShop templates</source>
+        <target>Plantillas de PrestaShop</target>
+      </trans-unit>
+      <trans-unit id="d8a4bd630dc6b56ebf1e045ddce706b9" resname="Redirect after unsubscribing">
+        <source>Redirect after unsubscribing</source>
+        <target>Redirigir después de la baja</target>
+      </trans-unit>
+      <trans-unit id="8b372224f698bdcc6c038c6e989674be" resname="Required by law in commercial email in most countries.">
+        <source>Required by law in commercial email in most countries.</source>
+        <target>Obligatorio por ley en el correo comercial en casi todos los países.</target>
+      </trans-unit>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354" resname="Save">
+        <source>Save</source>
+        <target>Guardar</target>
+      </trans-unit>
+      <trans-unit id="13348442cc6a27032d2b4aa28b75a5d3" resname="Search">
+        <source>Search</source>
+        <target>Buscar</target>
+      </trans-unit>
+      <trans-unit id="bbdd8007a268d41cd71cef509f0c230d" resname="Search by email address">
+        <source>Search by email address</source>
+        <target>Buscar por dirección de correo</target>
+      </trans-unit>
+      <trans-unit id="9a7e58ee13cb727cb7c4acc68f4cafe5" resname="Settings saved.">
+        <source>Settings saved.</source>
+        <target>Configuración guardada.</target>
+      </trans-unit>
+      <trans-unit id="9f82518d468b9fee614fcc92f76bb163" resname="Shop">
+        <source>Shop</source>
+        <target>Tienda</target>
+      </trans-unit>
+      <trans-unit id="5c2e29cb863e9264b1f440f901ecbfbd" resname="Show a manual unsubscribe form">
+        <source>Show a manual unsubscribe form</source>
+        <target>Mostrar un formulario de baja manual</target>
+      </trans-unit>
+      <trans-unit id="0a69902efd03fb4c040bacdf76a54bdf" resname="Signing key">
+        <source>Signing key</source>
+        <target>Clave de firma</target>
+      </trans-unit>
+      <trans-unit id="c633c93a271253686c5bda7353b0ec11" resname="Some checks did not pass. Fix them or the one-click unsubscribe will not work.">
+        <source>Some checks did not pass. Fix them or the one-click unsubscribe will not work.</source>
+        <target>Alguna comprobación no ha pasado. Arréglala o la baja en un clic no funcionará.</target>
+      </trans-unit>
+      <trans-unit id="ec53a8c4f07baed5d8825072c89799be" resname="Status">
+        <source>Status</source>
+        <target>Estado</target>
+      </trans-unit>
+      <trans-unit id="a6598659b992ea9afac3e524a9529407" resname="Subscribe again">
+        <source>Subscribe again</source>
+        <target>Volver a suscribir</target>
+      </trans-unit>
+      <trans-unit id="4cc0cc892dce7ccec29922fae1a655df" resname="Subscribe this address again?">
+        <source>Subscribe this address again?</source>
+        <target>¿Volver a suscribir esta dirección?</target>
+      </trans-unit>
+      <trans-unit id="278c491bdd8a53618c149c4ac790da34" resname="Template">
+        <source>Template</source>
+        <target>Plantilla</target>
+      </trans-unit>
+      <trans-unit id="7df96b18c230f90ada0a9e2307226338" resname="Templates">
+        <source>Templates</source>
+        <target>Plantillas</target>
+      </trans-unit>
+      <trans-unit id="71ed46ec13e7a6f7652a39ced5449ab5" resname="Templates found in this shop">
+        <source>Templates found in this shop</source>
+        <target>Plantillas encontradas en esta tienda</target>
+      </trans-unit>
+      <trans-unit id="4fbd5e0b4d10d5fbaf13b204a42f524e" resname="Templates that DO carry the headers">
+        <source>Templates that DO carry the headers</source>
+        <target>Plantillas que SÍ llevan las cabeceras</target>
+      </trans-unit>
+      <trans-unit id="0e585803b580671de08283da60e91dd0" resname="Templates that do NOT carry the headers">
+        <source>Templates that do NOT carry the headers</source>
+        <target>Plantillas que NO llevan las cabeceras</target>
+      </trans-unit>
+      <trans-unit id="8684e947f696c399da303dc3d3dba8f2" resname="That email address is not valid.">
+        <source>That email address is not valid.</source>
+        <target>Esa dirección de correo no es válida.</target>
+      </trans-unit>
+      <trans-unit id="f0ddfa2a91a5044e09de95dad48d3da3" resname="The links already sent will stop working. Continue?">
+        <source>The links already sent will stop working. Continue?</source>
+        <target>Los enlaces ya enviados dejarán de funcionar. ¿Continúo?</target>
+      </trans-unit>
+      <trans-unit id="4e16b6d94ede223ac468040a5cf3ee26" resname="The module adds both headers to the emails the shop sends, with an address that is unique per recipient and signed, so nobody can unsubscribe somebody else.">
+        <source>The module adds both headers to the emails the shop sends, with an address that is unique per recipient and signed, so nobody can unsubscribe somebody else.</source>
+        <target>El módulo añade las dos cabeceras a los correos que envía la tienda, con una dirección distinta y firmada para cada destinatario, para que nadie pueda dar de baja a otra persona.</target>
+      </trans-unit>
+      <trans-unit id="f062ab10f83aab83dcb9df24f32a8417" resname="The module is adding the headers.">
+        <source>The module is adding the headers.</source>
+        <target>El módulo está añadiendo las cabeceras.</target>
+      </trans-unit>
+      <trans-unit id="a80184a1bfdba7f39a5b65f2260bba87" resname="The page asks for the email address when the link carries no valid code.">
+        <source>The page asks for the email address when the link carries no valid code.</source>
+        <target>La página pide la dirección de correo cuando el enlace no trae un código válido.</target>
+      </trans-unit>
+      <trans-unit id="9ed7f098c7ac9f48050ea3832b45261a" resname="The redirect address must be a full URL, starting with http:// or https://.">
+        <source>The redirect address must be a full URL, starting with http:// or https://.</source>
+        <target>La dirección de redirección tiene que ser una URL completa, empezando por http:// o https://.</target>
+      </trans-unit>
+      <trans-unit id="495cf4a624307fd7bdf3adcd66d02eb8" resname="The table is missing.">
+        <source>The table is missing.</source>
+        <target>Falta la tabla.</target>
+      </trans-unit>
+      <trans-unit id="6425145ddae01904a78102538d8036dd" resname="The unsubscribe URL answers">
+        <source>The unsubscribe URL answers</source>
+        <target>La URL de baja responde</target>
+      </trans-unit>
+      <trans-unit id="99d59e3f2ae7c88f6a1087d440284008" resname="The unsubscribe email address is not valid.">
+        <source>The unsubscribe email address is not valid.</source>
+        <target>La dirección de correo para las bajas no es válida.</target>
+      </trans-unit>
+      <trans-unit id="a2ed09fc58a3c9f293176191c9b4b18e" resname="The unsubscribe links are signed.">
+        <source>The unsubscribe links are signed.</source>
+        <target>Los enlaces de baja van firmados.</target>
+      </trans-unit>
+      <trans-unit id="ae4f9fcff9b491caedeaeeabd90361d2" resname="These settings are global: they apply to every shop of the installation.">
+        <source>These settings are global: they apply to every shop of the installation.</source>
+        <target>Esta configuración es global: se aplica a todas las tiendas de la instalación.</target>
+      </trans-unit>
+      <trans-unit id="839b8f3a6d930388ac734d9eb136c033" resname="This is the address that travels in the header of every email; the code at the end changes for each recipient.">
+        <source>This is the address that travels in the header of every email; the code at the end changes for each recipient.</source>
+        <target>Esta es la dirección que viaja en la cabecera de cada correo; el código del final cambia para cada destinatario.</target>
+      </trans-unit>
+      <trans-unit id="911573089dd9ca938283ee982d89bfa0" resname="To check it end to end: send yourself a test email from a template that carries the headers, open it in Gmail and look for the &quot;Unsubscribe&quot; link next to the sender name.">
+        <source>To check it end to end: send yourself a test email from a template that carries the headers, open it in Gmail and look for the "Unsubscribe" link next to the sender name.</source>
+        <target>Para comprobarlo de punta a punta: envíate un correo de prueba desde una plantilla que lleve las cabeceras, ábrelo en Gmail y busca el enlace «Darse de baja» junto al nombre del remitente.</target>
+      </trans-unit>
+      <trans-unit id="febe3d59c5f1f19189c3ba9958a58f91" resname="Transactional email (order confirmations, invoices, passwords) must not carry the headers: choose which templates do in the Templates tab.">
+        <source>Transactional email (order confirmations, invoices, passwords) must not carry the headers: choose which templates do in the Templates tab.</source>
+        <target>El correo transaccional (confirmaciones de pedido, facturas, contraseñas) no debe llevar las cabeceras: elige qué plantillas las llevan en la pestaña Plantillas.</target>
+      </trans-unit>
+      <trans-unit id="6cc71721c4348ca639a4acc808219291" resname="Transactional email (orders, invoices, passwords) must not carry them.">
+        <source>Transactional email (orders, invoices, passwords) must not carry them.</source>
+        <target>El correo transaccional (pedidos, facturas, contraseñas) no debe llevarlas.</target>
+      </trans-unit>
+      <trans-unit id="0920d003f66af6ac7860a66a97409ecd" resname="Trust the proxy headers for the IP address">
+        <source>Trust the proxy headers for the IP address</source>
+        <target>Fiarse de las cabeceras del proxy para la dirección IP</target>
+      </trans-unit>
+      <trans-unit id="44d1b649827b215d8677e15f775f40f0" resname="Turn it on only if there is a proxy or a CDN in front of the shop.">
+        <source>Turn it on only if there is a proxy or a CDN in front of the shop.</source>
+        <target>Actívalo solo si hay un proxy o una CDN delante de la tienda.</target>
+      </trans-unit>
+      <trans-unit id="dafc705ddfbf5d304b5d7bb16f4a814e" resname="Turn on &quot;Add the unsubscribe headers&quot; in the General tab.">
+        <source>Turn on "Add the unsubscribe headers" in the General tab.</source>
+        <target>Activa «Añadir las cabeceras de baja» en la pestaña General.</target>
+      </trans-unit>
+      <trans-unit id="8efb7f49539905d3cfa7c2a2c77ef798" resname="Uncheck the newsletter box on the customer record">
+        <source>Uncheck the newsletter box on the customer record</source>
+        <target>Desmarcar la casilla de boletín en la ficha del cliente</target>
+      </trans-unit>
+      <trans-unit id="258ee21fb9ff2ecc4985e6ba2b41f7ec" resname="Unexpected answer (HTTP %d). Check that the front controller is reachable.">
+        <source>Unexpected answer (HTTP %d). Check that the front controller is reachable.</source>
+        <target>Respuesta inesperada (HTTP %d). Comprueba que se puede llegar al controlador del front.</target>
+      </trans-unit>
+      <trans-unit id="4182c8f19d40c7ca236a5f4f83faeb6b" resname="Unsubscribe">
+        <source>Unsubscribe</source>
+        <target>Baja</target>
+      </trans-unit>
+      <trans-unit id="6a776f84d8a1c56a2022e991f71a3475" resname="Unsubscribe URL">
+        <source>Unsubscribe URL</source>
+        <target>URL de baja</target>
+      </trans-unit>
+      <trans-unit id="b803aeb7fdb481af7d0cc0063f85ab25" resname="Unsubscribe URL over HTTPS">
+        <source>Unsubscribe URL over HTTPS</source>
+        <target>URL de baja por HTTPS</target>
+      </trans-unit>
+      <trans-unit id="1e0e82227a23326aa4c2e3c3dc93d9ef" resname="Unsubscribe email address">
+        <source>Unsubscribe email address</source>
+        <target>Dirección de correo para las bajas</target>
+      </trans-unit>
+      <trans-unit id="c90922f1271bd1459e48d9728377f12b" resname="Unsubscribe from every shop at once">
+        <source>Unsubscribe from every shop at once</source>
+        <target>Dar de baja en todas las tiendas a la vez</target>
+      </trans-unit>
+      <trans-unit id="4a7c9c2cff01329123faeff03bbd686c" resname="Unsubscribe in one click">
+        <source>Unsubscribe in one click</source>
+        <target>Baja en un clic</target>
+      </trans-unit>
+      <trans-unit id="5a2c09dd574660a2e5bbb3c5f552bfda" resname="Unsubscribe log table">
+        <source>Unsubscribe log table</source>
+        <target>Tabla del registro de bajas</target>
+      </trans-unit>
+      <trans-unit id="4f1378e58c8cc37ecad00c155830a1a5" resname="Unsubscribes">
+        <source>Unsubscribes</source>
+        <target>Bajas</target>
+      </trans-unit>
+      <trans-unit id="f423ba6a0206930d48186eb04c685880" resname="Use %s where the link should appear.">
+        <source>Use %s where the link should appear.</source>
+        <target>Pon %s donde quieras que salga el enlace.</target>
+      </trans-unit>
+      <trans-unit id="ff63d9bd9b28bf71ac0ebaff9e2fb9e3" resname="Used only in the &quot;Every email except&quot; mode.">
+        <source>Used only in the "Every email except" mode.</source>
+        <target>Solo se usa en el modo «Todos los correos menos».</target>
+      </trans-unit>
+      <trans-unit id="54407ff89e2610ddff53c9469fc9d65b" resname="Way">
+        <source>Way</source>
+        <target>Vía</target>
+      </trans-unit>
+      <trans-unit id="296c40b16246b93979488645ab0925c1" resname="When the mailbox calls that address, the module unchecks the newsletter box on the customer record and deactivates the subscription of guests.">
+        <source>When the mailbox calls that address, the module unchecks the newsletter box on the customer record and deactivates the subscription of guests.</source>
+        <target>Cuando el buzón llama a esa dirección, el módulo desmarca la casilla de boletín en la ficha del cliente y desactiva la suscripción de los invitados.</target>
+      </trans-unit>
+      <trans-unit id="d6d21829266d5eb54b2c15bdcb5f8198" resname="Which emails carry the headers">
+        <source>Which emails carry the headers</source>
+        <target>Qué correos llevan las cabeceras</target>
+      </trans-unit>
+      <trans-unit id="33b34ffe00105d62eee2e244ff43fcce" resname="Writes to modules/ecom_mailbajaclick/logs/.">
+        <source>Writes to modules/ecom_mailbajaclick/logs/.</source>
+        <target>Escribe en modules/ecom_mailbajaclick/logs/.</target>
+      </trans-unit>
+      <trans-unit id="93cba07454f06a4a960172bbd6e2a435" resname="Yes">
+        <source>Yes</source>
+        <target>Sí</target>
+      </trans-unit>
+      <trans-unit id="4668d7918388e37628b46749d1035115" resname="cURL is not available; check the URL by hand.">
+        <source>cURL is not available; check the URL by hand.</source>
+        <target>cURL no está disponible; comprueba la URL a mano.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

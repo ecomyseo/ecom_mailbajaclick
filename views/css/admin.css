@@ -1,0 +1,106 @@
+/**
+ * Baja en un clic (List-Unsubscribe)
+ *
+ * @author    Ecom Experts <ecomyseo@gmail.com>
+ * @copyright 2026 Ecom Experts
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License (AFL 3.0)
+ */
+.ecom-mbc-panel .alert {
+    margin: 10px 0 14px;
+}
+
+.ecom-mbc-diag {
+    margin-bottom: 10px;
+}
+
+.ecom-mbc-diag td {
+    vertical-align: middle;
+}
+
+.ecom-mbc-diag-icono {
+    width: 34px;
+}
+
+.ecom-mbc-diag-texto {
+    width: 230px;
+}
+
+.ecom-mbc-diag-detalle {
+    color: #666;
+    word-break: break-all;
+}
+
+.ecom-mbc-url {
+    margin: 6px 0 14px;
+}
+
+.ecom-mbc-url input {
+    font-family: monospace;
+    font-size: 12px;
+}
+
+.ecom-mbc-botones .btn {
+    margin: 0 6px 6px 0;
+}
+
+.ecom-mbc-ayuda {
+    border-top: 1px solid #eee;
+    padding-top: 6px;
+}
+
+.ecom-mbc-acordeon {
+    padding-left: 0;
+    font-weight: 600;
+}
+
+.ecom-mbc-plegado {
+    padding: 6px 0 12px;
+    color: #555;
+}
+
+.ecom-mbc-plegado ul {
+    padding-left: 18px;
+    list-style: disc;
+}
+
+.ecom-mbc-plegado li {
+    margin-bottom: 5px;
+}
+
+.ecom-mbc-log {
+    max-height: 320px;
+    overflow: auto;
+    font-size: 11px;
+    line-height: 15px;
+}
+
+.ecom-mbc-fichas .btn {
+    margin: 0 4px 4px 0;
+}
+
+.ecom-mbc-buscador {
+    margin-bottom: 12px;
+}
+
+.ecom-mbc-buscador input {
+    width: 260px;
+    display: inline-block;
+}
+
+.ecom-mbc-tabla td,
+.ecom-mbc-tabla th {
+    vertical-align: middle;
+    font-size: 12px;
+}
+
+.ecom-mbc-tabla form {
+    margin: 0;
+}
+
+.ecom-mbc-vacio {
+    padding: 14px 0;
+}
+
+.ecom-mbc-paginacion {
+    margin: 4px 0 10px;
+}

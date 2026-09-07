@@ -1,0 +1,33 @@
+/**
+ * Baja en un clic (List-Unsubscribe)
+ *
+ * @author    Ecom Experts <ecomyseo@gmail.com>
+ * @copyright 2026 Ecom Experts
+ * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License (AFL 3.0)
+ */
+.ecom-mbc {
+    max-width: 640px;
+    margin: 0 auto;
+}
+
+.ecom-mbc-email {
+    font-family: monospace;
+    margin: 6px 0 0;
+}
+
+.ecom-mbc-nota {
+    color: #777;
+    font-size: 14px;
+}
+
+.ecom-mbc-form {
+    margin-top: 12px;
+}
+
+.ecom-mbc-trampa {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}

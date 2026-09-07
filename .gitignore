@@ -1,0 +1,7 @@
+logs/*.log
+logs/*.old
+logs/.limpieza
+config.xml
+*.zip
+.DS_Store
+Thumbs.db

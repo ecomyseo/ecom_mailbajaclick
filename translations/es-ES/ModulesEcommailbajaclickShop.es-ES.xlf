@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="modules/ecom_mailbajaclick" source-language="en-US" target-language="es-ES" datatype="plaintext">
+    <body>
+      <trans-unit id="70e85e0c219c966d9dfb76b16b0dfbde" resname="Done. You will not receive any more commercial emails from us.">
+        <source>Done. You will not receive any more commercial emails from us.</source>
+        <target>Hecho. No volverás a recibir correos comerciales nuestros.</target>
+      </trans-unit>
+      <trans-unit id="b357b524e740bc85b9790a0712d84a30" resname="Email address">
+        <source>Email address</source>
+        <target>Dirección de correo</target>
+      </trans-unit>
+      <trans-unit id="f7f5bb84172f31406654306822a6eaf1" resname="If you no longer want to receive emails like this one, %s.">
+        <source>If you no longer want to receive emails like this one, %s.</source>
+        <target>Si ya no quieres recibir correos como este, %s.</target>
+      </trans-unit>
+      <trans-unit id="7a48423600a8de29f11cbb04c8e23fb5" resname="Leave this field empty">
+        <source>Leave this field empty</source>
+        <target>Deja este campo vacío</target>
+      </trans-unit>
+      <trans-unit id="a39f4293ffd4ec7d2e96a5ea90f1b9f8" resname="Order confirmations and other messages you need in order to buy will still reach you.">
+        <source>Order confirmations and other messages you need in order to buy will still reach you.</source>
+        <target>Seguirás recibiendo las confirmaciones de pedido y los demás mensajes que necesitas para comprar.</target>
+      </trans-unit>
+      <trans-unit id="8e45a2d24846585198761c4b5b7d76a8" resname="Please write a valid email address.">
+        <source>Please write a valid email address.</source>
+        <target>Escribe una dirección de correo válida.</target>
+      </trans-unit>
+      <trans-unit id="ba177c60612408216d9d1f22fafe1869" resname="This unsubscribe link is not valid or has expired.">
+        <source>This unsubscribe link is not valid or has expired.</source>
+        <target>Este enlace de baja no es válido o ha caducado.</target>
+      </trans-unit>
+      <trans-unit id="4182c8f19d40c7ca236a5f4f83faeb6b" resname="Unsubscribe">
+        <source>Unsubscribe</source>
+        <target>Darse de baja</target>
+      </trans-unit>
+      <trans-unit id="9ac903f843d93b7bf8ef4b75549e30b3" resname="Write the email address you want to remove from our mailing list.">
+        <source>Write the email address you want to remove from our mailing list.</source>
+        <target>Escribe la dirección de correo que quieres quitar de nuestra lista de envíos.</target>
+      </trans-unit>
+      <trans-unit id="eead2df1867d409ad72c5aead3037c90" resname="You were already unsubscribed.">
+        <source>You were already unsubscribed.</source>
+        <target>Ya estabas dado de baja.</target>
+      </trans-unit>
+      <trans-unit id="126581ee3e2438e6e6a3eb11caf5a067" resname="unsubscribe here">
+        <source>unsubscribe here</source>
+        <target>date de baja aquí</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
