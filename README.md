@@ -1,3 +1,17 @@
+# One-click unsubscribe for PrestaShop
+
+**Adds the List-Unsubscribe and List-Unsubscribe-Post headers (RFC 8058) that Gmail, Yahoo and Outlook require since 2024 to PrestaShop 8 and 9 emails.**
+
+- RFC 8058 List-Unsubscribe-Post
+- PrestaShop 8 (Swift) and 9 (Symfony Mailer)
+- Own unsubscribe endpoint
+
+> 🇪🇸 Documentación completa en castellano más abajo · Full docs below (Spanish).
+
+⭐ If this saves you time, a star helps other people find it.
+
+---
+
 # Baja en un clic (List-Unsubscribe) — módulo para PrestaShop 8 y 9
 
 Añade a los correos de la tienda las cabeceras **`List-Unsubscribe`** y
