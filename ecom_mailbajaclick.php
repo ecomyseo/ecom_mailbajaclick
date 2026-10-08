@@ -74,7 +74,7 @@ class Ecom_Mailbajaclick extends Module
     {
         $this->name = 'ecom_mailbajaclick';
         $this->tab = 'emailing';
-        $this->version = '1.2.0';
+        $this->version = '1.2.1';
         $this->author = 'Ecom Experts';
         $this->need_instance = 0;
         $this->bootstrap = true;
@@ -1052,8 +1052,8 @@ class Ecom_Mailbajaclick extends Module
         $excluidas = array_values(array_diff($detectadas, $seleccionadas));
         sort($seleccionadas);
         sort($excluidas);
-        Configuration::updateGlobalValue('ECOM_MBC_TPL_INCLUDE', implode(\n, $seleccionadas));
-        Configuration::updateGlobalValue('ECOM_MBC_TPL_EXCLUDE', implode(\n, $excluidas));
+        Configuration::updateGlobalValue('ECOM_MBC_TPL_INCLUDE', implode(PHP_EOL, $seleccionadas));
+        Configuration::updateGlobalValue('ECOM_MBC_TPL_EXCLUDE', implode(PHP_EOL, $excluidas));
 
         $pie = array();
         foreach (Language::getLanguages(false) as $idioma) {
@@ -1565,7 +1565,7 @@ class Ecom_Mailbajaclick extends Module
         ksort($filas);
         $this->context->smarty->assign(array(
             'mbc_selector_plantillas' => array_values($filas),
-            'mbc_selector_valor' => implode(\n, $activas),
+            'mbc_selector_valor' => implode(PHP_EOL, $activas),
         ));
 
         return $this->display(__FILE__, 'views/templates/admin/plantillas.tpl');
@@ -1596,8 +1596,8 @@ class Ecom_Mailbajaclick extends Module
         sort($activas);
         sort($inactivas);
         Configuration::updateGlobalValue('ECOM_MBC_MODE', self::MODO_INCLUIR);
-        Configuration::updateGlobalValue('ECOM_MBC_TPL_INCLUDE', implode(\n, $activas));
-        Configuration::updateGlobalValue('ECOM_MBC_TPL_EXCLUDE', implode(\n, $inactivas));
+        Configuration::updateGlobalValue('ECOM_MBC_TPL_INCLUDE', implode(PHP_EOL, $activas));
+        Configuration::updateGlobalValue('ECOM_MBC_TPL_EXCLUDE', implode(PHP_EOL, $inactivas));
     }
 
     protected function nombresPlantillasDetectadas()

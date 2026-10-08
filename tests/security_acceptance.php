@@ -23,6 +23,7 @@ $checks = array(
     'Selector doble' => strpos($module, 'sincronizarPlantillasDetectadas') !== false,
     'Transaccionales excluidas' => strpos($module, 'esPlantillaTransaccional') !== false,
     'Nuevas activas' => strpos($module, '$activas[] = $nombre') !== false,
+    'Separadores PHP válidos' => strpos($module, 'implode(\\n') === false,
 );
 
 $fallos = 0;

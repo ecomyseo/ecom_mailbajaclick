@@ -1,5 +1,9 @@
 # Historial de cambios
 
+## 1.2.1 - 2026-10-08
+
+- Corrige el error «Undefined constant n» al guardar o mostrar la selección de plantillas.
+
 ## 1.2.0 - 2026-10-08
 
 - Selector de dos columnas «NO» y «SÍ» con buscador.

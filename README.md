@@ -33,7 +33,7 @@ mandar los envíos a la carpeta de correo no deseado.
 
 ---
 
-## Versión 1.2.0
+## Versión 1.2.1
 
 Compatible con PrestaShop 1.7.8 hasta 9.2. GET nunca da de baja: muestra una confirmación POST firmada. El POST automático RFC 8058 exige List-Unsubscribe=One-Click en el cuerpo, no usa sesión ni redirecciones y es idempotente.
 
