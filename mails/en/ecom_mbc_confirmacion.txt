@@ -1,0 +1,6 @@
+You asked to stop receiving commercial email from {shop_name}.
+
+Confirm the unsubscribe request:
+{confirmation_url}
+
+If you did not make this request, you can ignore this message.

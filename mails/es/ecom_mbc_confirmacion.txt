@@ -1,0 +1,6 @@
+Has solicitado dejar de recibir correos comerciales de {shop_name}.
+
+Confirma la solicitud de baja en este enlace:
+{confirmation_url}
+
+Si no has hecho esta solicitud, puedes ignorar este mensaje.

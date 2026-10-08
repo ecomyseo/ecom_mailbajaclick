@@ -454,6 +454,54 @@
         <source>cURL is not available; check the URL by hand.</source>
         <target>cURL no está disponible; comprueba la URL a mano.</target>
       </trans-unit>
+      <trans-unit id='mbc110-update-check' resname='Check for module updates'>
+        <source>Check for module updates</source>
+        <target>Comprobar actualizaciones del módulo</target>
+      </trans-unit>
+      <trans-unit id='mbc110-update-privacy' resname='If enabled, the shop domain, contact email and module version are sent weekly to modules.gmartos.es.'>
+        <source>If enabled, the shop domain, contact email and module version are sent weekly to modules.gmartos.es.</source>
+        <target>Si se activa, el dominio, el correo de contacto y la versión del módulo se envían semanalmente a modules.gmartos.es.</target>
+      </trans-unit>
+      <trans-unit id='mbc111-overrides-required' resname='Overrides must be enabled because the PrestaShop test email bypasses all mail hooks.'>
+        <source>Overrides must be enabled because the PrestaShop test email bypasses all mail hooks.</source>
+        <target>Las sobreescrituras deben estar activadas porque el correo de prueba de PrestaShop se salta todos los puntos de enganche del correo.</target>
+      </trans-unit>
+      <trans-unit id='mbc120-origin-core' resname='PrestaShop or active theme'>
+        <source>PrestaShop or active theme</source>
+        <target>PrestaShop o tema activo</target>
+      </trans-unit>
+      <trans-unit id='mbc120-all-info' resname='All templates are listed below. New templates are enabled automatically, except transactional messages such as orders, payments, invoices, shipping, passwords and support.'>
+        <source>All templates are listed below. New templates are enabled automatically, except transactional messages such as orders, payments, invoices, shipping, passwords and support.</source>
+        <target>Debajo aparecen todas las plantillas. Las nuevas se activan automáticamente, excepto los mensajes transaccionales como pedidos, pagos, facturas, envíos, contraseñas y soporte.</target>
+      </trans-unit>
+      <trans-unit id='mbc120-search' resname='Search templates'>
+        <source>Search templates</source>
+        <target>Buscar plantillas</target>
+      </trans-unit>
+      <trans-unit id='mbc120-search-help' resname='Write a template or module name'>
+        <source>Write a template or module name</source>
+        <target>Escribe el nombre de una plantilla o módulo</target>
+      </trans-unit>
+      <trans-unit id='mbc120-without' resname='Without unsubscribe headers'>
+        <source>Without unsubscribe headers</source>
+        <target>Sin cabeceras de baja</target>
+      </trans-unit>
+      <trans-unit id='mbc120-transactional' resname='Transactional emails that Gmail must never treat as advertising.'>
+        <source>Transactional emails that Gmail must never treat as advertising.</source>
+        <target>Correos transaccionales que Gmail nunca debe tratar como publicidad.</target>
+      </trans-unit>
+      <trans-unit id='mbc120-with' resname='With unsubscribe headers'>
+        <source>With unsubscribe headers</source>
+        <target>Con cabeceras de baja</target>
+      </trans-unit>
+      <trans-unit id='mbc120-commercial' resname='Commercial emails, newsletters, promotions and any template enabled by the merchant.'>
+        <source>Commercial emails, newsletters, promotions and any template enabled by the merchant.</source>
+        <target>Correos comerciales, boletines, promociones y cualquier plantilla que active el comercio.</target>
+      </trans-unit>
+      <trans-unit id='mbc120-test-required' resname='The PrestaShop test email is mandatory.'>
+        <source>The PrestaShop test email is mandatory.</source>
+        <target>El correo de prueba de PrestaShop es obligatorio.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

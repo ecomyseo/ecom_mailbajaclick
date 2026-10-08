@@ -14,6 +14,13 @@
      * addEventListener directo sobre ellos seria null.
      */
     document.addEventListener('click', function (evento) {
+        var plantilla = evento.target.closest ? evento.target.closest('.ecom-mbc-plantilla') : null;
+        if (plantilla) {
+            evento.preventDefault();
+            moverPlantilla(plantilla);
+            return;
+        }
+
         var acordeon = evento.target.closest ? evento.target.closest('.ecom-mbc-acordeon') : null;
         if (acordeon) {
             evento.preventDefault();
@@ -39,6 +46,51 @@
             anadirPlantilla(ficha.getAttribute('data-mbc-plantilla'));
         }
     });
+
+    document.addEventListener('input', function (evento) {
+        if (evento.target.id !== 'ecom-mbc-buscar-plantilla') {
+            return;
+        }
+        var texto = normalizar(evento.target.value);
+        document.querySelectorAll('.ecom-mbc-plantilla').forEach(function (plantilla) {
+            var contenido = normalizar(plantilla.getAttribute('data-mbc-busqueda') || '');
+            plantilla.style.display = contenido.indexOf(texto) !== -1 ? '' : 'none';
+        });
+    });
+
+    function moverPlantilla(plantilla) {
+        var estaActiva = plantilla.closest('#ecom-mbc-lista-si') !== null;
+        var destino = document.getElementById(estaActiva ? 'ecom-mbc-lista-no' : 'ecom-mbc-lista-si');
+        if (!destino || plantilla.getAttribute('data-mbc-plantilla') === 'test') {
+            return;
+        }
+        destino.appendChild(plantilla);
+        var flecha = plantilla.querySelector('span');
+        if (flecha) {
+            flecha.textContent = estaActiva ? '→' : '←';
+        }
+        sincronizarSelector();
+    }
+
+    function sincronizarSelector() {
+        var campo = document.getElementById('ECOM_MBC_TPL_INCLUDE_SELECTOR');
+        if (!campo) {
+            return;
+        }
+        var activas = [];
+        document.querySelectorAll('#ecom-mbc-lista-si .ecom-mbc-plantilla').forEach(function (plantilla) {
+            activas.push(plantilla.getAttribute('data-mbc-plantilla'));
+        });
+        campo.value = activas.join('\n');
+    }
+
+    function normalizar(texto) {
+        texto = (texto || '').toLowerCase();
+        if (texto.normalize) {
+            texto = texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        }
+        return texto;
+    }
 
     /**
      * Anade el nombre de una plantilla al area de texto que toca segun el modo

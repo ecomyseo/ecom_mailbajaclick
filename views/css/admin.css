@@ -104,3 +104,61 @@
 .ecom-mbc-paginacion {
     margin: 4px 0 10px;
 }
+
+.ecom-mbc-selector-busqueda {
+    max-width: 520px;
+}
+
+.ecom-mbc-selector-columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 18px;
+}
+
+.ecom-mbc-selector-columna {
+    border: 1px solid #bbcdd2;
+    border-radius: 5px;
+    background: #f8fafb;
+    padding: 14px;
+}
+
+.ecom-mbc-selector-columna h3 {
+    margin: 0 0 6px;
+}
+
+.ecom-mbc-selector-lista {
+    min-height: 240px;
+    max-height: 540px;
+    overflow-y: auto;
+}
+
+.ecom-mbc-plantilla {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    margin: 0 0 6px;
+    padding: 8px 10px;
+    border: 1px solid #ccd7da;
+    border-radius: 4px;
+    background: #fff;
+    color: #253238;
+    text-align: left;
+}
+
+.ecom-mbc-plantilla:hover,
+.ecom-mbc-plantilla:focus {
+    border-color: #25b9d7;
+    background: #eefbfe;
+}
+
+.ecom-mbc-plantilla small {
+    color: #6c868e;
+}
+
+@media (max-width: 900px) {
+    .ecom-mbc-selector-columnas {
+        grid-template-columns: 1fr;
+    }
+}

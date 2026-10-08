@@ -46,6 +46,30 @@
         <source>unsubscribe here</source>
         <target>date de baja aquí</target>
       </trans-unit>
+      <trans-unit id='mbc110-confirm-subject' resname='Confirm your unsubscribe request'>
+        <source>Confirm your unsubscribe request</source>
+        <target>Confirma tu solicitud de baja</target>
+      </trans-unit>
+      <trans-unit id='mbc110-confirm-text' resname='Confirm that you want to stop receiving commercial emails.'>
+        <source>Confirm that you want to stop receiving commercial emails.</source>
+        <target>Confirma que quieres dejar de recibir correos comerciales.</target>
+      </trans-unit>
+      <trans-unit id='mbc110-confirm-button' resname='Confirm unsubscribe'>
+        <source>Confirm unsubscribe</source>
+        <target>Confirmar la baja</target>
+      </trans-unit>
+      <trans-unit id='mbc110-form-text' resname='Write your email address and we will send you a confirmation link.'>
+        <source>Write your email address and we will send you a confirmation link.</source>
+        <target>Escribe tu dirección de correo y te enviaremos un enlace de confirmación.</target>
+      </trans-unit>
+      <trans-unit id='mbc110-request-error' resname='We could not process your request. Please try again later.'>
+        <source>We could not process your request. Please try again later.</source>
+        <target>No hemos podido procesar tu solicitud. Inténtalo de nuevo más tarde.</target>
+      </trans-unit>
+      <trans-unit id='mbc110-uniform-message' resname='If that address is subscribed, we have sent a confirmation link. Check your inbox.'>
+        <source>If that address is subscribed, we have sent a confirmation link. Check your inbox.</source>
+        <target>Si esa dirección está suscrita, hemos enviado un enlace de confirmación. Revisa tu bandeja de entrada.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

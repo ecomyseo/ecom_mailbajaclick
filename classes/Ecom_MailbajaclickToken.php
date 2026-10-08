@@ -84,7 +84,7 @@ class Ecom_MailbajaclickToken
             $datos .= str_repeat('=', 4 - $resto);
         }
 
-        return base64_decode($datos);
+        return base64_decode($datos, true);
     }
 
     /**
@@ -127,7 +127,7 @@ class Ecom_MailbajaclickToken
      */
     public static function leer($token)
     {
-        if (!is_string($token) || Tools::strlen($token) < 10 || strpos($token, '.') === false) {
+        if (!is_string($token) || Tools::strlen($token) < 10 || Tools::strlen($token) > 1024 || strpos($token, '.') === false) {
             return false;
         }
 
@@ -139,7 +139,7 @@ class Ecom_MailbajaclickToken
         list($carga, $firma) = $partes;
         $esperada = Tools::substr(hash_hmac('sha256', $carga, self::secreto()), 0, 32);
 
-        if (!hash_equals($esperada, (string) $firma)) {
+        if (Tools::strlen((string) $firma) !== 32 || !hash_equals($esperada, (string) $firma)) {
             return false;
         }
 
@@ -153,16 +153,36 @@ class Ecom_MailbajaclickToken
             return false;
         }
 
+        $fecha = isset($datos['t']) ? (int) $datos['t'] : 0;
+        if ($fecha <= 0 || $fecha > (time() + 300)) {
+            return false;
+        }
         $dias = (int) Configuration::getGlobalValue('ECOM_MBC_EXPIRE_DAYS');
-        if ($dias > 0 && isset($datos['t']) && (time() - (int) $datos['t']) > ($dias * 86400)) {
+        if ($dias > 0 && (time() - $fecha) > ($dias * 86400)) {
+            return false;
+        }
+        $idShop = isset($datos['s']) ? (int) $datos['s'] : 0;
+        if ($idShop <= 0 || !Shop::getShop($idShop)) {
             return false;
         }
 
         return array(
             'email' => (string) $datos['e'],
-            'id_shop' => isset($datos['s']) ? (int) $datos['s'] : 0,
-            'fecha' => isset($datos['t']) ? (int) $datos['t'] : 0,
+            'id_shop' => $idShop,
+            'fecha' => $fecha,
             'origen' => isset($datos['o']) ? (string) $datos['o'] : '',
         );
+    }
+
+    public static function csrf($token)
+    {
+        return hash_hmac('sha256', 'confirmar|' . (string) $token, self::secreto());
+    }
+
+    public static function validarCsrf($token, $csrf)
+    {
+        return is_string($csrf)
+            && Tools::strlen($csrf) === 64
+            && hash_equals(self::csrf($token), $csrf);
     }
 }

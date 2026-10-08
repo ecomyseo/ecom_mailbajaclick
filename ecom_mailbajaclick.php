@@ -64,6 +64,7 @@ class Ecom_Mailbajaclick extends Module
         'ECOM_MBC_PRETTY' => 1,
         'ECOM_MBC_TRUST_PROXY' => 0,
         'ECOM_MBC_DEBUG' => 0,
+        'ECOM_MBC_UPDATE_CHECK' => 0,
     );
 
     /**
@@ -73,13 +74,13 @@ class Ecom_Mailbajaclick extends Module
     {
         $this->name = 'ecom_mailbajaclick';
         $this->tab = 'emailing';
-        $this->version = '1.0.0';
+        $this->version = '1.2.0';
         $this->author = 'Ecom Experts';
         $this->need_instance = 0;
         $this->bootstrap = true;
         $this->module_key = '';
 
-        $this->ps_versions_compliancy = array('min' => '1.7.0.0', 'max' => _PS_VERSION_);
+        $this->ps_versions_compliancy = array('min' => '1.7.8.0', 'max' => '9.2.99');
 
         parent::__construct();
 
@@ -132,6 +133,14 @@ class Ecom_Mailbajaclick extends Module
      */
     public function install()
     {
+        if (Configuration::get('PS_DISABLE_MODULE_OVERRIDES')) {
+            $this->_errors[] = $this->trans(
+                'Overrides must be enabled because the PrestaShop test email bypasses all mail hooks.',
+                array(),
+                'Modules.Ecommailbajaclick.Admin'
+            );
+            return false;
+        }
         if (!parent::install()) {
             return false;
         }
@@ -148,13 +157,16 @@ class Ecom_Mailbajaclick extends Module
 
         Ecom_MailbajaclickToken::secreto();
         $this->guardarTextoPie($this->textoPiePorDefecto());
+        $this->sincronizarPlantillasDetectadas();
 
         foreach ($this->hooksNecesarios() as $hook) {
             $this->registerHook($hook);
         }
 
         Configuration::updateValue('GMARTOS_LAST_PING_' . $this->name, 0);
-        $this->checkGmartosUpdate();
+        if (Configuration::getGlobalValue('ECOM_MBC_UPDATE_CHECK')) {
+            $this->checkGmartosUpdate();
+        }
 
         return true;
     }
@@ -239,12 +251,7 @@ class Ecom_Mailbajaclick extends Module
      */
     public function uninstall()
     {
-        try {
-            Db::getInstance()->execute('DROP TABLE IF EXISTS `' . _DB_PREFIX_ . Ecom_MailbajaclickBaja::TABLA . '`');
-        } catch (Exception $e) {
-            // La desinstalacion no se bloquea por la tabla.
-        }
-
+        // Las tablas de supresión se conservan para no volver a escribir a personas dadas de baja.
         foreach (array_keys(self::$opciones) as $clave) {
             Configuration::deleteByName($clave);
         }
@@ -335,6 +342,7 @@ class Ecom_Mailbajaclick extends Module
             }
 
             Ecom_MailbajaclickToken::secreto();
+            $this->sincronizarPlantillasDetectadas();
 
             foreach ($this->hooksNecesarios() as $hook) {
                 if (!$this->isRegisteredInHook($hook)) {
@@ -366,9 +374,21 @@ class Ecom_Mailbajaclick extends Module
         self::$correoActual = array(
             'template' => isset($params['template']) ? (string) $params['template'] : '',
             'to' => isset($params['to']) ? $params['to'] : '',
+            'bcc' => isset($params['bcc']) ? $params['bcc'] : '',
             'id_shop' => isset($params['idShop']) ? (int) $params['idShop'] : 0,
             'id_lang' => isset($params['idLang']) ? (int) $params['idLang'] : 0,
         );
+
+        $email = $this->destinatarioDelContexto();
+        if ($email !== ''
+            && $this->plantillaAplica(self::$correoActual['template'])
+            && Ecom_MailbajaclickBaja::estaSuprimido($email, $this->idShopActual())) {
+            Ecom_MailbajaclickLog::add('Envío comercial bloqueado por la lista de supresión', 'envio', array(
+                'plantilla' => self::$correoActual['template'],
+            ));
+            self::$correoActual = array();
+            return false;
+        }
 
         return true;
     }
@@ -431,9 +451,10 @@ class Ecom_Mailbajaclick extends Module
                 return;
             }
 
-            if (method_exists($cabeceras, 'remove')) {
-                $cabeceras->remove('List-Unsubscribe');
-                $cabeceras->remove('List-Unsubscribe-Post');
+            if ((method_exists($cabeceras, 'has') && ($cabeceras->has('List-Unsubscribe') || $cabeceras->has('List-Unsubscribe-Post')))
+                || (method_exists($cabeceras, 'hasHeader') && ($cabeceras->hasHeader('List-Unsubscribe') || $cabeceras->hasHeader('List-Unsubscribe-Post')))) {
+                self::$correoActual = array();
+                return;
             }
 
             $cabeceras->addTextHeader('List-Unsubscribe', implode(', ', $valores));
@@ -445,13 +466,12 @@ class Ecom_Mailbajaclick extends Module
 
             Ecom_MailbajaclickLog::add('Cabeceras añadidas', 'cabecera', array(
                 'plantilla' => $plantilla,
-                'email' => $email,
-                'url' => $url,
                 'oneclick' => Tools::substr($url, 0, 8) === 'https://',
             ));
         } catch (Exception $e) {
             Ecom_MailbajaclickLog::add('Fallo al añadir las cabeceras: ' . $e->getMessage(), 'cabecera');
         }
+        self::$correoActual = array();
     }
 
     /**
@@ -567,6 +587,11 @@ class Ecom_Mailbajaclick extends Module
         $modo = (int) Configuration::getGlobalValue('ECOM_MBC_MODE');
         $plantilla = Tools::strtolower(trim((string) $plantilla));
 
+        // La prueba de correo de PrestaShop siempre debe llevar las cabeceras.
+        if ($plantilla === 'test') {
+            return true;
+        }
+
         if ($modo === self::MODO_TODAS) {
             return true;
         }
@@ -576,6 +601,23 @@ class Ecom_Mailbajaclick extends Module
         }
 
         return $this->coincide($plantilla, Configuration::getGlobalValue('ECOM_MBC_TPL_INCLUDE'));
+    }
+
+    public function anadirCabecerasPrueba($mensaje, $email)
+    {
+        if (!is_object($mensaje) || !Validate::isEmail($email) || !method_exists($mensaje, 'getHeaders')) {
+            return false;
+        }
+        $url = $this->urlBaja($email, (int) Context::getContext()->shop->id, 'test');
+        if ($url === '') {
+            return false;
+        }
+        $cabeceras = $mensaje->getHeaders();
+        $cabeceras->addTextHeader('List-Unsubscribe', '<' . $url . '>');
+        if (Tools::substr($url, 0, 8) === 'https://') {
+            $cabeceras->addTextHeader('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
+        }
+        return true;
     }
 
     /**
@@ -625,8 +667,8 @@ class Ecom_Mailbajaclick extends Module
     protected function destinatario($mensaje)
     {
         $email = $this->destinatarioDelContexto();
-        if ($email !== '') {
-            return $email;
+        if ($email === '') {
+            return '';
         }
 
         try {
@@ -634,27 +676,24 @@ class Ecom_Mailbajaclick extends Module
                 return '';
             }
 
-            $destinos = $mensaje->getTo();
-
-            // Symfony Mailer devuelve un array de objetos Address.
-            if (is_array($destinos)) {
-                foreach ($destinos as $clave => $valor) {
-                    if (is_object($valor) && method_exists($valor, 'getAddress')) {
-                        return (string) $valor->getAddress();
-                    }
-                    if (is_string($clave) && Validate::isEmail($clave)) {
-                        return $clave;
-                    }
-                    if (is_string($valor) && Validate::isEmail($valor)) {
-                        return $valor;
-                    }
-                }
+            $total = $this->contarDestinatarios($mensaje->getTo());
+            if (method_exists($mensaje, 'getCc')) {
+                $total += $this->contarDestinatarios($mensaje->getCc());
             }
+            if (method_exists($mensaje, 'getBcc')) {
+                $total += $this->contarDestinatarios($mensaje->getBcc());
+            }
+            return $total === 1 ? $email : '';
         } catch (Exception $e) {
             Ecom_MailbajaclickLog::add('Fallo al leer el destinatario: ' . $e->getMessage(), 'cabecera');
         }
 
         return '';
+    }
+
+    protected function contarDestinatarios($destinos)
+    {
+        return is_array($destinos) ? count($destinos) : ($destinos ? 1 : 0);
     }
 
     /**
@@ -917,7 +956,7 @@ class Ecom_Mailbajaclick extends Module
 
         $salida = '';
 
-        if ($this->checkGmartosUpdate()) {
+        if (Configuration::getGlobalValue('ECOM_MBC_UPDATE_CHECK') && $this->checkGmartosUpdate()) {
             $this->context->smarty->assign(array(
                 'gmartos_latest_version' => Configuration::get('GMARTOS_LATEST_VERSION_' . $this->name),
             ));
@@ -959,15 +998,6 @@ class Ecom_Mailbajaclick extends Module
             $salida .= $this->displayConfirmation(sprintf($this->trans('Log files deleted: %d', array(), 'Modules.Ecommailbajaclick.Admin'), $borrados));
         }
 
-        if (Tools::isSubmit('submitEcomMbcReactivar')) {
-            $email = trim((string) Tools::getValue('ecom_mbc_email'));
-            if (Ecom_MailbajaclickBaja::reactivar($email)) {
-                $salida .= $this->displayConfirmation(sprintf($this->trans('%s has been subscribed again.', array(), 'Modules.Ecommailbajaclick.Admin'), $email));
-            } else {
-                $salida .= $this->displayError($this->trans('That email address is not valid.', array(), 'Modules.Ecommailbajaclick.Admin'));
-            }
-        }
-
         return $salida;
     }
 
@@ -998,12 +1028,13 @@ class Ecom_Mailbajaclick extends Module
             'ECOM_MBC_ACTIVE', 'ECOM_MBC_ADD_MAILTO', 'ECOM_MBC_FOOTER', 'ECOM_MBC_FORCE_HTTPS',
             'ECOM_MBC_UNSUB_CUSTOMER', 'ECOM_MBC_UNSUB_SUBSCRIPTION', 'ECOM_MBC_ALL_SHOPS',
             'ECOM_MBC_FORM', 'ECOM_MBC_PRETTY', 'ECOM_MBC_TRUST_PROXY', 'ECOM_MBC_DEBUG',
+            'ECOM_MBC_UPDATE_CHECK',
         );
         foreach ($booleanos as $clave) {
             Configuration::updateGlobalValue($clave, (int) Tools::getValue($clave) ? 1 : 0);
         }
 
-        Configuration::updateGlobalValue('ECOM_MBC_MODE', (int) Tools::getValue('ECOM_MBC_MODE'));
+        Configuration::updateGlobalValue('ECOM_MBC_MODE', self::MODO_INCLUIR);
         Configuration::updateGlobalValue('ECOM_MBC_EXPIRE_DAYS', max(0, (int) Tools::getValue('ECOM_MBC_EXPIRE_DAYS')));
         Configuration::updateGlobalValue('ECOM_MBC_MAILTO', $mailto);
         Configuration::updateGlobalValue('ECOM_MBC_REDIRECT', $redirect);
@@ -1011,8 +1042,18 @@ class Ecom_Mailbajaclick extends Module
         $ruta = trim(preg_replace('/[^a-z0-9\-_\/]/i', '', (string) Tools::getValue('ECOM_MBC_ROUTE')), '/');
         Configuration::updateGlobalValue('ECOM_MBC_ROUTE', $ruta !== '' ? $ruta : 'baja-boletin');
 
-        Configuration::updateGlobalValue('ECOM_MBC_TPL_INCLUDE', (string) Tools::getValue('ECOM_MBC_TPL_INCLUDE'));
-        Configuration::updateGlobalValue('ECOM_MBC_TPL_EXCLUDE', (string) Tools::getValue('ECOM_MBC_TPL_EXCLUDE'));
+        $detectadas = $this->nombresPlantillasDetectadas();
+        $seleccionadas = $this->normalizarListaPlantillas((string) Tools::getValue('ECOM_MBC_TPL_INCLUDE'));
+        if (!in_array('test', $seleccionadas, true)) {
+            $seleccionadas[] = 'test';
+        }
+        $permitidas = array_merge($detectadas, array('test'));
+        $seleccionadas = array_values(array_intersect($seleccionadas, $permitidas));
+        $excluidas = array_values(array_diff($detectadas, $seleccionadas));
+        sort($seleccionadas);
+        sort($excluidas);
+        Configuration::updateGlobalValue('ECOM_MBC_TPL_INCLUDE', implode(\n, $seleccionadas));
+        Configuration::updateGlobalValue('ECOM_MBC_TPL_EXCLUDE', implode(\n, $excluidas));
 
         $pie = array();
         foreach (Language::getLanguages(false) as $idioma) {
@@ -1213,6 +1254,15 @@ class Ecom_Mailbajaclick extends Module
         );
         $inputs[] = array(
             'type' => 'switch',
+            'label' => $this->trans('Check for module updates', array(), 'Modules.Ecommailbajaclick.Admin'),
+            'name' => 'ECOM_MBC_UPDATE_CHECK',
+            'tab' => 'mbcgeneral',
+            'desc' => $this->trans('If enabled, the shop domain, contact email and module version are sent weekly to modules.gmartos.es.', array(), 'Modules.Ecommailbajaclick.Admin'),
+            'is_bool' => true,
+            'values' => $this->valoresSwitch('ECOM_MBC_UPDATE_CHECK'),
+        );
+        $inputs[] = array(
+            'type' => 'switch',
             'label' => $this->trans('Force HTTPS in the unsubscribe link', array(), 'Modules.Ecommailbajaclick.Admin'),
             'name' => 'ECOM_MBC_FORCE_HTTPS',
             'tab' => 'mbcgeneral',
@@ -1256,9 +1306,10 @@ class Ecom_Mailbajaclick extends Module
 
         /* ---- Pestana de plantillas ---- */
         $inputs[] = array(
-            'type' => 'radio',
+            'type' => 'hidden',
             'label' => $this->trans('Which emails carry the headers', array(), 'Modules.Ecommailbajaclick.Admin'),
             'name' => 'ECOM_MBC_MODE',
+            'value' => self::MODO_INCLUIR,
             'tab' => 'mbcplantillas',
             'desc' => $this->trans('Transactional email (orders, invoices, passwords) must not carry them.', array(), 'Modules.Ecommailbajaclick.Admin'),
             'values' => array(
@@ -1280,7 +1331,7 @@ class Ecom_Mailbajaclick extends Module
             ),
         );
         $inputs[] = array(
-            'type' => 'textarea',
+            'type' => 'hidden',
             'label' => $this->trans('Templates that DO carry the headers', array(), 'Modules.Ecommailbajaclick.Admin'),
             'name' => 'ECOM_MBC_TPL_INCLUDE',
             'tab' => 'mbcplantillas',
@@ -1289,7 +1340,7 @@ class Ecom_Mailbajaclick extends Module
             'desc' => $this->trans('One per line. The * wildcard is allowed.', array(), 'Modules.Ecommailbajaclick.Admin'),
         );
         $inputs[] = array(
-            'type' => 'textarea',
+            'type' => 'hidden',
             'label' => $this->trans('Templates that do NOT carry the headers', array(), 'Modules.Ecommailbajaclick.Admin'),
             'name' => 'ECOM_MBC_TPL_EXCLUDE',
             'tab' => 'mbcplantillas',
@@ -1484,9 +1535,115 @@ class Ecom_Mailbajaclick extends Module
      */
     protected function renderPlantillasDetectadas()
     {
-        $this->context->smarty->assign('mbc_plantillas', $this->plantillasDetectadas());
+        $this->sincronizarPlantillasDetectadas();
+        $activas = $this->normalizarListaPlantillas((string) Configuration::getGlobalValue('ECOM_MBC_TPL_INCLUDE'));
+        $filas = array();
+        foreach ($this->plantillasDetectadas() as $grupo => $plantillas) {
+            if ($grupo === 'core') {
+                foreach ($plantillas as $nombre) {
+                    $filas[$nombre] = array(
+                        'nombre' => $nombre,
+                        'origen' => $this->trans('PrestaShop or active theme', array(), 'Modules.Ecommailbajaclick.Admin'),
+                        'activa' => in_array($nombre, $activas, true),
+                    );
+                }
+                continue;
+            }
+            foreach ($plantillas as $fila) {
+                $nombre = $fila['plantilla'];
+                if (!isset($filas[$nombre])) {
+                    $filas[$nombre] = array(
+                        'nombre' => $nombre,
+                        'origen' => $fila['modulo'],
+                        'activa' => in_array($nombre, $activas, true),
+                    );
+                } elseif (strpos($filas[$nombre]['origen'], $fila['modulo']) === false) {
+                    $filas[$nombre]['origen'] .= ', ' . $fila['modulo'];
+                }
+            }
+        }
+        ksort($filas);
+        $this->context->smarty->assign(array(
+            'mbc_selector_plantillas' => array_values($filas),
+            'mbc_selector_valor' => implode(\n, $activas),
+        ));
 
         return $this->display(__FILE__, 'views/templates/admin/plantillas.tpl');
+    }
+
+    protected function sincronizarPlantillasDetectadas()
+    {
+        $detectadas = $this->nombresPlantillasDetectadas();
+        if (empty($detectadas)) {
+            return;
+        }
+        $activas = $this->normalizarListaPlantillas((string) Configuration::getGlobalValue('ECOM_MBC_TPL_INCLUDE'));
+        $inactivas = $this->normalizarListaPlantillas((string) Configuration::getGlobalValue('ECOM_MBC_TPL_EXCLUDE'));
+        foreach ($detectadas as $nombre) {
+            if (in_array($nombre, $activas, true) || in_array($nombre, $inactivas, true)) {
+                continue;
+            }
+            if ($this->esPlantillaTransaccional($nombre)) {
+                $inactivas[] = $nombre;
+            } else {
+                $activas[] = $nombre;
+            }
+        }
+        if (!in_array('test', $activas, true)) {
+            $activas[] = 'test';
+        }
+        $inactivas = array_values(array_diff($inactivas, $activas));
+        sort($activas);
+        sort($inactivas);
+        Configuration::updateGlobalValue('ECOM_MBC_MODE', self::MODO_INCLUIR);
+        Configuration::updateGlobalValue('ECOM_MBC_TPL_INCLUDE', implode(\n, $activas));
+        Configuration::updateGlobalValue('ECOM_MBC_TPL_EXCLUDE', implode(\n, $inactivas));
+    }
+
+    protected function nombresPlantillasDetectadas()
+    {
+        $nombres = array();
+        $detectadas = $this->plantillasDetectadas();
+        foreach ($detectadas['core'] as $nombre) {
+            $nombres[] = Tools::strtolower(trim((string) $nombre));
+        }
+        foreach ($detectadas['modulos'] as $fila) {
+            $nombres[] = Tools::strtolower(trim((string) $fila['plantilla']));
+        }
+        $nombres = array_values(array_unique(array_filter($nombres)));
+        sort($nombres);
+        return $nombres;
+    }
+
+    protected function normalizarListaPlantillas($lista)
+    {
+        $resultado = array();
+        foreach (preg_split('/[\r\n,;]+/', (string) $lista) as $nombre) {
+            $nombre = Tools::strtolower(trim($nombre));
+            if ($nombre !== '' && !in_array($nombre, $resultado, true)) {
+                $resultado[] = $nombre;
+            }
+        }
+        return $resultado;
+    }
+
+    protected function esPlantillaTransaccional($nombre)
+    {
+        $patrones = array(
+            'order', 'pedido', 'payment', 'pago', 'invoice', 'factura', 'credit_slip',
+            'refund', 'reembolso', 'shipped', 'shipping', 'envio', 'enviado', 'carrier',
+            'transport', 'delivery', 'preparation', 'bankwire', 'cheque', 'cashondelivery',
+            'password', 'contrasena', 'account', 'customer_qty', 'guest_to_customer',
+            'contact', 'reply', 'support', 'employee', 'return', 'devolucion', 'download',
+            'voucher', 'stock', 'supplier', 'merchant', 'backoffice', 'log_alert',
+        );
+        $normalizado = Tools::strtolower((string) $nombre);
+        foreach ($patrones as $patron) {
+            if (strpos($normalizado, $patron) !== false) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -1505,30 +1662,33 @@ class Ecom_Mailbajaclick extends Module
                 $iso = $idioma->iso_code;
             }
 
-            $rutas = array(
-                _PS_MAIL_DIR_ . $iso . '/',
-                _PS_MAIL_DIR_ . 'en/',
-            );
+            $rutas = array(_PS_MAIL_DIR_ . '*/');
             if (defined('_PS_ALL_THEMES_DIR_') && is_object($this->context->shop)) {
-                $rutas[] = _PS_ALL_THEMES_DIR_ . $this->context->shop->theme_name . '/mails/' . $iso . '/';
+                $rutas[] = _PS_ALL_THEMES_DIR_ . $this->context->shop->theme_name . '/mails/*/';
             }
 
-            foreach ($rutas as $ruta) {
-                $ficheros = glob($ruta . '*.html');
-                foreach (is_array($ficheros) ? $ficheros : array() as $fichero) {
-                    $nombre = basename($fichero, '.html');
-                    if (!in_array($nombre, $encontradas['core'], true)) {
-                        $encontradas['core'][] = $nombre;
+            foreach ($rutas as $patronRuta) {
+                foreach (array('html', 'txt') as $extension) {
+                    $ficheros = glob($patronRuta . '*.' . $extension);
+                    foreach (is_array($ficheros) ? $ficheros : array() as $fichero) {
+                        $nombre = basename($fichero, '.' . $extension);
+                        if (!in_array($nombre, $encontradas['core'], true)) {
+                            $encontradas['core'][] = $nombre;
+                        }
                     }
                 }
             }
 
-            $ficheros = glob(_PS_MODULE_DIR_ . '*/mails/' . $iso . '/*.html');
-            foreach (is_array($ficheros) ? $ficheros : array() as $fichero) {
-                $modulo = basename(dirname(dirname(dirname($fichero))));
-                $nombre = basename($fichero, '.html');
-                $encontradas['modulos'][] = array('modulo' => $modulo, 'plantilla' => $nombre);
+            foreach (array('html', 'txt') as $extension) {
+                $ficheros = glob(_PS_MODULE_DIR_ . '*/mails/*/*.' . $extension);
+                foreach (is_array($ficheros) ? $ficheros : array() as $fichero) {
+                    $modulo = basename(dirname(dirname(dirname($fichero))));
+                    $nombre = basename($fichero, '.' . $extension);
+                    $llave = $modulo . '|' . $nombre;
+                    $encontradas['modulos'][$llave] = array('modulo' => $modulo, 'plantilla' => $nombre);
+                }
             }
+            $encontradas['modulos'] = array_values($encontradas['modulos']);
         } catch (Exception $e) {
             Ecom_MailbajaclickLog::add('Fallo al detectar plantillas: ' . $e->getMessage(), 'admin');
         }

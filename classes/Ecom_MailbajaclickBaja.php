@@ -58,6 +58,10 @@ class Ecom_MailbajaclickBaja
         if (!$idShop) {
             $idShop = (int) Context::getContext()->shop->id;
         }
+        if ($idShop <= 0 || !Shop::getShop($idShop)) {
+            $resultado['mensaje'] = 'Tienda no válida';
+            return $resultado;
+        }
 
         // Guardia en memoria: dos llamadas en la misma peticion no duplican el registro.
         $llave = Tools::strtolower($email) . '|' . (int) $idShop;
@@ -68,19 +72,38 @@ class Ecom_MailbajaclickBaja
         $todasTiendas = (bool) Configuration::getGlobalValue('ECOM_MBC_ALL_SHOPS');
         $idsShop = $todasTiendas ? self::tiendasActivas() : array((int) $idShop);
 
+        if (empty($idsShop)) {
+            $resultado['mensaje'] = 'No hay tiendas válidas';
+            return $resultado;
+        }
         $yaEstaba = !self::estaSuscrito($email, $idsShop);
-
-        if (Configuration::getGlobalValue('ECOM_MBC_UNSUB_CUSTOMER')) {
-            $resultado['clientes'] = self::bajaClientes($email, $idsShop);
+        $db = Db::getInstance();
+        $db->execute('START TRANSACTION');
+        try {
+            if (Configuration::getGlobalValue('ECOM_MBC_UNSUB_CUSTOMER')) {
+                $resultado['clientes'] = self::bajaClientes($email, $idsShop);
+                if ($resultado['clientes'] === false) {
+                    throw new Exception('No se pudo actualizar customer');
+                }
+            }
+            if (Configuration::getGlobalValue('ECOM_MBC_UNSUB_SUBSCRIPTION')) {
+                $resultado['suscripciones'] = self::bajaSuscripciones($email, $idsShop);
+                if ($resultado['suscripciones'] === false) {
+                    throw new Exception('No se pudo actualizar emailsubscription');
+                }
+            }
+            if (!self::registrar($email, (int) $idShop, $metodo, $origen, $resultado)) {
+                throw new Exception('No se pudo registrar la supresión');
+            }
+            $db->execute('COMMIT');
+            $resultado['ok'] = true;
+        } catch (Exception $e) {
+            $db->execute('ROLLBACK');
+            $resultado['mensaje'] = $e->getMessage();
+            Ecom_MailbajaclickLog::add('Baja revertida por un fallo: ' . $e->getMessage(), 'baja');
+            return $resultado;
         }
-        if (Configuration::getGlobalValue('ECOM_MBC_UNSUB_SUBSCRIPTION')) {
-            $resultado['suscripciones'] = self::bajaSuscripciones($email, $idsShop);
-        }
-
-        $resultado['ok'] = true;
         $resultado['ya_estaba'] = $yaEstaba;
-
-        self::registrar($email, (int) $idShop, $metodo, $origen, $resultado);
 
         Ecom_MailbajaclickLog::add('Baja ejecutada', 'baja', array(
             'email' => $email,
@@ -138,7 +161,7 @@ class Ecom_MailbajaclickBaja
             if (self::existeTabla(_DB_PREFIX_ . 'emailsubscription')) {
                 Db::getInstance()->execute(
                     'UPDATE `' . _DB_PREFIX_ . 'emailsubscription` SET `active` = 1
-                     WHERE `email` = \'' . pSQL($email) . '\'' . $filtro
+                     WHERE `email` = \'' . pSQL($email) . '\'' . pSQL($filtro)
                 );
             }
         } catch (Exception $e) {
@@ -189,6 +212,20 @@ class Ecom_MailbajaclickBaja
         return false;
     }
 
+    public static function estaSuprimido($email, $idShop)
+    {
+        if (!Validate::isEmail($email) || (int) $idShop <= 0 || !self::existeTabla(_DB_PREFIX_ . self::TABLA)) {
+            return false;
+        }
+        $filtro = Configuration::getGlobalValue('ECOM_MBC_ALL_SHOPS')
+            ? ''
+            : ' AND `id_shop` = ' . (int) $idShop;
+        return (bool) Db::getInstance()->getValue(
+            'SELECT 1 FROM `' . _DB_PREFIX_ . self::TABLA . '`'
+            . ' WHERE `email` = \'' . pSQL($email) . '\'' . $filtro
+        );
+    }
+
     /**
      * Desactiva la casilla de boletin en las fichas de cliente.
      *
@@ -202,17 +239,19 @@ class Ecom_MailbajaclickBaja
         $filtro = self::filtroTiendas($idsShop, 'id_shop');
 
         try {
-            Db::getInstance()->execute(
+            if (!Db::getInstance()->execute(
                 'UPDATE `' . _DB_PREFIX_ . 'customer` SET `newsletter` = 0
                  WHERE `email` = \'' . pSQL($email) . '\' AND `newsletter` = 1 AND `deleted` = 0' . $filtro
-            );
+            )) {
+                return false;
+            }
 
             return (int) Db::getInstance()->Affected_Rows();
         } catch (Exception $e) {
             Ecom_MailbajaclickLog::add('Fallo al dar de baja al cliente: ' . $e->getMessage(), 'baja');
         }
 
-        return 0;
+        return false;
     }
 
     /**
@@ -232,17 +271,19 @@ class Ecom_MailbajaclickBaja
         $filtro = self::filtroTiendas($idsShop, 'id_shop');
 
         try {
-            Db::getInstance()->execute(
+            if (!Db::getInstance()->execute(
                 'UPDATE `' . _DB_PREFIX_ . 'emailsubscription` SET `active` = 0
                  WHERE `email` = \'' . pSQL($email) . '\' AND `active` = 1' . $filtro
-            );
+            )) {
+                return false;
+            }
 
             return (int) Db::getInstance()->Affected_Rows();
         } catch (Exception $e) {
             Ecom_MailbajaclickLog::add('Fallo al dar de baja la suscripcion: ' . $e->getMessage(), 'baja');
         }
 
-        return 0;
+        return false;
     }
 
     /**
@@ -254,12 +295,12 @@ class Ecom_MailbajaclickBaja
      * @param string $origen
      * @param array  $resultado
      *
-     * @return void
+     * @return bool
      */
     protected static function registrar($email, $idShop, $metodo, $origen, array $resultado)
     {
         try {
-            Db::getInstance()->insert(self::TABLA, array(
+            return (bool) Db::getInstance()->insert(self::TABLA, array(
                 'email' => pSQL($email),
                 'id_shop' => (int) $idShop,
                 'metodo' => pSQL(Tools::substr((string) $metodo, 0, 20)),
@@ -272,6 +313,7 @@ class Ecom_MailbajaclickBaja
         } catch (Exception $e) {
             Ecom_MailbajaclickLog::add('Fallo al registrar la baja: ' . $e->getMessage(), 'baja');
         }
+        return false;
     }
 
     /**
@@ -369,10 +411,35 @@ class Ecom_MailbajaclickBaja
         }
 
         if (empty($limpias)) {
-            return '';
+            return ' AND 1 = 0';
         }
 
         return ' AND `' . bqSQL($columna) . '` IN (' . implode(',', $limpias) . ')';
+    }
+
+    public static function permitirSolicitud($email, $ip)
+    {
+        if (!self::existeTabla(_DB_PREFIX_ . 'ecom_mbc_solicitud')) {
+            return false;
+        }
+        $desde = date('Y-m-d H:i:s', time() - 3600);
+        $porEmail = (int) Db::getInstance()->getValue(
+            'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'ecom_mbc_solicitud` WHERE `email_hash` = \'' . pSQL(hash('sha256', Tools::strtolower(trim($email)))) . '\' AND `date_add` >= \'' . pSQL($desde) . '\''
+        );
+        $porIp = (int) Db::getInstance()->getValue(
+            'SELECT COUNT(*) FROM `' . _DB_PREFIX_ . 'ecom_mbc_solicitud` WHERE `ip_hash` = \'' . pSQL(hash('sha256', (string) $ip)) . '\' AND `date_add` >= \'' . pSQL($desde) . '\''
+        );
+        return $porEmail < 3 && $porIp < 10;
+    }
+
+    public static function registrarSolicitud($email, $ip, $idShop)
+    {
+        return (bool) Db::getInstance()->insert('ecom_mbc_solicitud', array(
+            'email_hash' => pSQL(hash('sha256', Tools::strtolower(trim($email)))),
+            'ip_hash' => pSQL(hash('sha256', (string) $ip)),
+            'id_shop' => (int) $idShop,
+            'date_add' => date('Y-m-d H:i:s'),
+        ));
     }
 
     /**

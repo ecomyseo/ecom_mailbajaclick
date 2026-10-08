@@ -36,8 +36,25 @@
       </p>
     {/if}
 
-    {if $mbc.formulario && !$mbc.hecho}
-      <p>{l s='Write the email address you want to remove from our mailing list.' d='Modules.Ecommailbajaclick.Shop'}</p>
+    {if $mbc.solicitud_enviada}
+      <div class='alert alert-success' role='status'>
+        {l s='If that address is subscribed, we have sent a confirmation link. Check your inbox.' d='Modules.Ecommailbajaclick.Shop'}
+      </div>
+    {/if}
+
+    {if $mbc.confirmacion && !$mbc.hecho}
+      <p>{l s='Confirm that you want to stop receiving commercial emails.' d='Modules.Ecommailbajaclick.Shop'}</p>
+      <p class='ecom-mbc-email'>{$mbc.email|escape:'html':'UTF-8'}</p>
+      <form method='post' action='{$mbc_accion|escape:'html':'UTF-8'}' class='ecom-mbc-form'>
+        <input type='hidden' name='u' value='{$mbc.token|escape:'html':'UTF-8'}'>
+        <input type='hidden' name='ecom_mbc_csrf' value='{$mbc.csrf|escape:'html':'UTF-8'}'>
+        <button type='submit' name='ecom_mbc_confirmar' value='1' class='btn btn-primary'>
+          {l s='Confirm unsubscribe' d='Modules.Ecommailbajaclick.Shop'}
+        </button>
+      </form>
+    {/if}
+    {if $mbc.formulario && !$mbc.hecho && !$mbc.confirmacion && !$mbc.solicitud_enviada}
+      <p>{l s='Write your email address and we will send you a confirmation link.' d='Modules.Ecommailbajaclick.Shop'}</p>
 
       <form method="post" action="{$mbc_accion|escape:'html':'UTF-8'}" class="ecom-mbc-form">
         <div class="form-group">

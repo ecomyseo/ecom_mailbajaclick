@@ -1,44 +1,55 @@
 {**
- * Baja en un clic (List-Unsubscribe)
- *
- * @author    Ecom Experts <ecomyseo@gmail.com>
- * @copyright 2026 Ecom Experts
- * @license   https://opensource.org/licenses/AFL-3.0 Academic Free License (AFL 3.0)
+ * Selector de plantillas de correo.
  *}
-<div class="ecom-mbc-detectadas">
-  <button type="button" class="btn btn-link ecom-mbc-acordeon" data-mbc-destino="ecom-mbc-detectadas-cuerpo">
-    <i class="icon-list"></i> {l s='Templates found in this shop' d='Modules.Ecommailbajaclick.Admin'}
-  </button>
+<div class='ecom-mbc-selector'>
+  <input type='hidden' id='ECOM_MBC_TPL_INCLUDE_SELECTOR' name='ECOM_MBC_TPL_INCLUDE' value='{$mbc_selector_valor|escape:'html':'UTF-8'}'>
+  <input type='hidden' name='ECOM_MBC_TPL_EXCLUDE' value=''>
+  <input type='hidden' name='ECOM_MBC_MODE' value='1'>
 
-  <div id="ecom-mbc-detectadas-cuerpo" class="ecom-mbc-plegado" style="display:none;">
-    <p class="help-block">
-      {l s='Click a name to add it to the list above.' d='Modules.Ecommailbajaclick.Admin'}
-    </p>
+  <div class='alert alert-info'>
+    {l s='All templates are listed below. New templates are enabled automatically, except transactional messages such as orders, payments, invoices, shipping, passwords and support.' d='Modules.Ecommailbajaclick.Admin'}
+  </div>
 
-    {if $mbc_plantillas.core}
-      <p><strong>{l s='PrestaShop templates' d='Modules.Ecommailbajaclick.Admin'}</strong></p>
-      <p class="ecom-mbc-fichas">
-        {foreach from=$mbc_plantillas.core item=nombre}
-          <button type="button" class="btn btn-default btn-xs ecom-mbc-ficha"
-                  data-mbc-plantilla="{$nombre|escape:'html':'UTF-8'}">{$nombre|escape:'html':'UTF-8'}</button>
+  <div class='form-group ecom-mbc-selector-busqueda'>
+    <label for='ecom-mbc-buscar-plantilla'>{l s='Search templates' d='Modules.Ecommailbajaclick.Admin'}</label>
+    <input type='search' id='ecom-mbc-buscar-plantilla' class='form-control'
+           placeholder='{l s='Write a template or module name' d='Modules.Ecommailbajaclick.Admin'}'>
+  </div>
+
+  <div class='ecom-mbc-selector-columnas'>
+    <section class='ecom-mbc-selector-columna ecom-mbc-selector-no' data-mbc-lista='no'>
+      <h3><span class='label label-danger'>NO</span> {l s='Without unsubscribe headers' d='Modules.Ecommailbajaclick.Admin'}</h3>
+      <p class='help-block'>{l s='Transactional emails that Gmail must never treat as advertising.' d='Modules.Ecommailbajaclick.Admin'}</p>
+      <div class='ecom-mbc-selector-lista' id='ecom-mbc-lista-no'>
+        {foreach from=$mbc_selector_plantillas item=fila}
+          {if !$fila.activa}
+            <button type='button' class='ecom-mbc-plantilla' data-mbc-plantilla='{$fila.nombre|escape:'html':'UTF-8'}'
+                    data-mbc-busqueda='{$fila.nombre|escape:'html':'UTF-8'} {$fila.origen|escape:'html':'UTF-8'}'
+                    {if $fila.nombre == 'test'}disabled title='{l s='The PrestaShop test email is mandatory.' d='Modules.Ecommailbajaclick.Admin'}'{/if}>
+              <strong>{$fila.nombre|escape:'html':'UTF-8'}</strong>
+              <small>{$fila.origen|escape:'html':'UTF-8'}</small>
+              <span aria-hidden='true'>→</span>
+            </button>
+          {/if}
         {/foreach}
-      </p>
-    {/if}
+      </div>
+    </section>
 
-    {if $mbc_plantillas.modulos}
-      <p><strong>{l s='Module templates' d='Modules.Ecommailbajaclick.Admin'}</strong></p>
-      <p class="ecom-mbc-fichas">
-        {foreach from=$mbc_plantillas.modulos item=fila}
-          <button type="button" class="btn btn-default btn-xs ecom-mbc-ficha"
-                  data-mbc-plantilla="{$fila.plantilla|escape:'html':'UTF-8'}"
-                  title="{$fila.modulo|escape:'html':'UTF-8'}">{$fila.plantilla|escape:'html':'UTF-8'}
-            <span class="text-muted">({$fila.modulo|escape:'html':'UTF-8'})</span></button>
+    <section class='ecom-mbc-selector-columna ecom-mbc-selector-si' data-mbc-lista='si'>
+      <h3><span class='label label-success'>SÍ</span> {l s='With unsubscribe headers' d='Modules.Ecommailbajaclick.Admin'}</h3>
+      <p class='help-block'>{l s='Commercial emails, newsletters, promotions and any template enabled by the merchant.' d='Modules.Ecommailbajaclick.Admin'}</p>
+      <div class='ecom-mbc-selector-lista' id='ecom-mbc-lista-si'>
+        {foreach from=$mbc_selector_plantillas item=fila}
+          {if $fila.activa}
+            <button type='button' class='ecom-mbc-plantilla' data-mbc-plantilla='{$fila.nombre|escape:'html':'UTF-8'}'
+                    data-mbc-busqueda='{$fila.nombre|escape:'html':'UTF-8'} {$fila.origen|escape:'html':'UTF-8'}'>
+              <span aria-hidden='true'>←</span>
+              <strong>{$fila.nombre|escape:'html':'UTF-8'}</strong>
+              <small>{$fila.origen|escape:'html':'UTF-8'}</small>
+            </button>
+          {/if}
         {/foreach}
-      </p>
-    {/if}
-
-    {if !$mbc_plantillas.core && !$mbc_plantillas.modulos}
-      <p class="text-muted">{l s='No email template was found.' d='Modules.Ecommailbajaclick.Admin'}</p>
-    {/if}
+      </div>
+    </section>
   </div>
 </div>

@@ -21,8 +21,7 @@ require_once _PS_MODULE_DIR_ . 'ecom_mailbajaclick/classes/Ecom_MailbajaclickBaj
  *  - POST con "List-Unsubscribe=One-Click": es Gmail, Yahoo u Outlook pulsando
  *    el boton de baja. Se procesa y se responde en texto plano, sin pedir
  *    confirmacion (lo exige la RFC 8058) y sin montar la plantilla del tema.
- *  - GET con el codigo firmado: es la persona pulsando el enlace del pie. Se
- *    da de baja y se le ensena la pagina de confirmacion.
+ *  - GET con el codigo firmado: muestra una confirmacion, pero no modifica datos.
  *  - GET sin codigo: formulario para escribir el correo a mano.
  */
 class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontController
@@ -57,6 +56,13 @@ class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontCont
 
         if ($this->esOneClick()) {
             $this->procesarOneClick();
+        }
+        if (isset($_SERVER['REQUEST_METHOD'])
+            && Tools::strtoupper($_SERVER['REQUEST_METHOD']) === 'POST'
+            && (string) Tools::getValue('u') !== ''
+            && !Tools::isSubmit('ecom_mbc_manual')
+            && !Tools::isSubmit('ecom_mbc_confirmar')) {
+            $this->responderTexto('Invalid one-click unsubscribe request.', 400);
         }
 
         $this->ssl = (bool) Configuration::get('PS_SSL_ENABLED');
@@ -95,11 +101,17 @@ class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontCont
             'error' => '',
             'email' => '',
             'formulario' => false,
+            'confirmacion' => false,
+            'token' => '',
+            'csrf' => '',
+            'solicitud_enviada' => false,
         );
 
         $token = (string) Tools::getValue('u');
 
-        if (Tools::isSubmit('ecom_mbc_manual')) {
+        if (Tools::isSubmit('ecom_mbc_confirmar')) {
+            $this->procesarConfirmacion($token);
+        } elseif (Tools::isSubmit('ecom_mbc_manual')) {
             $this->procesarFormulario();
         } elseif ($token !== '') {
             $this->procesarToken($token);
@@ -159,7 +171,18 @@ class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontCont
             return false;
         }
 
-        return (string) Tools::getValue('u') !== '';
+        if ((string) Tools::getValue('u') === '') {
+            return false;
+        }
+
+        $tipo = isset($_SERVER['CONTENT_TYPE']) ? Tools::strtolower(trim(explode(';', $_SERVER['CONTENT_TYPE'])[0])) : '';
+        if ($tipo !== 'application/x-www-form-urlencoded') {
+            return false;
+        }
+
+        return isset($_POST['List-Unsubscribe'])
+            && is_string($_POST['List-Unsubscribe'])
+            && hash_equals('One-Click', $_POST['List-Unsubscribe']);
     }
 
     /**
@@ -172,20 +195,23 @@ class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontCont
         $token = (string) Tools::getValue('u');
         $datos = Ecom_MailbajaclickToken::leer($token);
 
-        if ($datos === false) {
+        if ($datos === false || !$this->tokenPerteneceATienda($datos)) {
             Ecom_MailbajaclickLog::add('Código no válido en la baja en un clic', 'oneclick', array(
                 'ip' => Ecom_MailbajaclickBaja::ip(),
             ));
             $this->responderTexto('Invalid or expired unsubscribe code.', 400);
         }
 
-        Ecom_MailbajaclickBaja::ejecutar(
+        $resultado = Ecom_MailbajaclickBaja::ejecutar(
             $datos['email'],
             (int) $datos['id_shop'],
             'oneclick',
             $datos['origen']
         );
 
+        if (!$resultado['ok']) {
+            $this->responderTexto('Unable to process unsubscribe request.', 500);
+        }
         $this->responderTexto('Unsubscribed', 200);
     }
 
@@ -235,6 +261,8 @@ class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontCont
         header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
         header('Pragma: no-cache');
         header('Expires: 0');
+        header('Referrer-Policy: no-referrer');
+        header('X-Robots-Tag: noindex, nofollow, noarchive');
     }
 
     /* ------------------------------------------------------------------ */
@@ -242,7 +270,7 @@ class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontCont
     /* ------------------------------------------------------------------ */
 
     /**
-     * Da de baja a partir del codigo firmado del enlace.
+     * Comprueba el código y prepara la confirmación. GET nunca modifica datos.
      *
      * @param string $token
      *
@@ -252,7 +280,7 @@ class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontCont
     {
         $datos = Ecom_MailbajaclickToken::leer($token);
 
-        if ($datos === false) {
+        if ($datos === false || !$this->tokenPerteneceATienda($datos)) {
             Ecom_MailbajaclickLog::add('Código no válido en el enlace', 'enlace');
             $this->estado['error'] = $this->trans(
                 'This unsubscribe link is not valid or has expired.',
@@ -264,16 +292,28 @@ class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontCont
             return;
         }
 
-        $resultado = Ecom_MailbajaclickBaja::ejecutar(
-            $datos['email'],
-            (int) $datos['id_shop'],
-            'enlace',
-            $datos['origen']
-        );
+        $this->estado['confirmacion'] = true;
+        $this->estado['token'] = $token;
+        $this->estado['csrf'] = Ecom_MailbajaclickToken::csrf($token);
+        $this->estado['email'] = $this->ocultarEmail($datos['email']);
+    }
 
+    protected function procesarConfirmacion($token)
+    {
+        $datos = Ecom_MailbajaclickToken::leer($token);
+        $csrf = (string) Tools::getValue('ecom_mbc_csrf');
+        if ($datos === false || !$this->tokenPerteneceATienda($datos) || !Ecom_MailbajaclickToken::validarCsrf($token, $csrf)) {
+            $this->estado['error'] = $this->trans('This unsubscribe link is not valid or has expired.', array(), 'Modules.Ecommailbajaclick.Shop');
+            return;
+        }
+
+        $resultado = Ecom_MailbajaclickBaja::ejecutar($datos['email'], (int) $datos['id_shop'], 'confirmacion', $datos['origen']);
         $this->estado['hecho'] = (bool) $resultado['ok'];
         $this->estado['ya_estaba'] = (bool) $resultado['ya_estaba'];
-        $this->estado['email'] = $datos['email'];
+        $this->estado['email'] = $this->ocultarEmail($datos['email']);
+        if (!$resultado['ok']) {
+            $this->estado['error'] = $this->trans('We could not process your request. Please try again later.', array(), 'Modules.Ecommailbajaclick.Shop');
+        }
     }
 
     /**
@@ -314,16 +354,33 @@ class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontCont
             return;
         }
 
-        $resultado = Ecom_MailbajaclickBaja::ejecutar(
-            $email,
-            (int) $this->context->shop->id,
-            'formulario',
-            ''
-        );
+        if (!Ecom_MailbajaclickBaja::permitirSolicitud($email, Ecom_MailbajaclickBaja::ip())) {
+            $this->estado['solicitud_enviada'] = true;
+            return;
+        }
 
-        $this->estado['hecho'] = (bool) $resultado['ok'];
-        $this->estado['ya_estaba'] = (bool) $resultado['ya_estaba'];
-        $this->estado['email'] = $email;
+        $idShop = (int) $this->context->shop->id;
+        if (Ecom_MailbajaclickBaja::estaSuscrito($email, array($idShop))) {
+            $token = Ecom_MailbajaclickToken::crear($email, $idShop, 'formulario');
+            $url = $this->context->link->getModuleLink('ecom_mailbajaclick', 'unsubscribe', array('u' => $token), true);
+            Mail::Send(
+                (int) $this->context->language->id,
+                'ecom_mbc_confirmacion',
+                $this->trans('Confirm your unsubscribe request', array(), 'Modules.Ecommailbajaclick.Shop'),
+                array('{confirmation_url}' => $url, '{shop_name}' => Configuration::get('PS_SHOP_NAME')),
+                $email,
+                null,
+                null,
+                null,
+                null,
+                null,
+                _PS_MODULE_DIR_ . $this->module->name . '/mails/',
+                false,
+                $idShop
+            );
+        }
+        Ecom_MailbajaclickBaja::registrarSolicitud($email, Ecom_MailbajaclickBaja::ip(), $idShop);
+        $this->estado['solicitud_enviada'] = true;
     }
 
     /**
@@ -352,5 +409,20 @@ class Ecom_MailbajaclickUnsubscribeModuleFrontController extends ModuleFrontCont
     protected function urlPropia()
     {
         return $this->context->link->getModuleLink('ecom_mailbajaclick', 'unsubscribe', array(), true);
+    }
+
+    protected function ocultarEmail($email)
+    {
+        $partes = explode('@', (string) $email, 2);
+        if (count($partes) !== 2) {
+            return '';
+        }
+        return Tools::substr($partes[0], 0, 1) . '***@' . $partes[1];
+    }
+
+    protected function tokenPerteneceATienda(array $datos)
+    {
+        return isset($this->context->shop)
+            && (int) $this->context->shop->id === (int) $datos['id_shop'];
     }
 }

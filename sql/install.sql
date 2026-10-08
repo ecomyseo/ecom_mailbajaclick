@@ -17,5 +17,17 @@ CREATE TABLE IF NOT EXISTS `PREFIX_ecom_mbc_baja` (
     `date_add` DATETIME NOT NULL,
     PRIMARY KEY (`id_baja`),
     KEY `email` (`email`),
+    KEY `email_shop` (`email`, `id_shop`),
     KEY `date_add` (`date_add`)
+) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `PREFIX_ecom_mbc_solicitud` (
+    `id_solicitud` INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+    `email_hash` CHAR(64) NOT NULL,
+    `ip_hash` CHAR(64) NOT NULL,
+    `id_shop` INT(11) UNSIGNED NOT NULL,
+    `date_add` DATETIME NOT NULL,
+    PRIMARY KEY (`id_solicitud`),
+    KEY `email_fecha` (`email_hash`, `date_add`),
+    KEY `ip_fecha` (`ip_hash`, `date_add`)
 ) ENGINE=ENGINE_TYPE DEFAULT CHARSET=utf8mb4;

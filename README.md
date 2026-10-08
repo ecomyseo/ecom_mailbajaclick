@@ -33,6 +33,20 @@ mandar los envíos a la carpeta de correo no deseado.
 
 ---
 
+## Versión 1.2.0
+
+Compatible con PrestaShop 1.7.8 hasta 9.2. GET nunca da de baja: muestra una confirmación POST firmada. El POST automático RFC 8058 exige List-Unsubscribe=One-Click en el cuerpo, no usa sesión ni redirecciones y es idempotente.
+
+Mail::Send consulta la lista local de supresión. Los conectores externos deben escuchar actionEcomMailbajaclickUnsubscribe. La comprobación remota de actualizaciones está desactivada de forma predeterminada.
+
+Para acreditar la entrega, abre «Mostrar original» en el buzón final y comprueba las dos cabeceras, dkim=pass y su presencia en h=. Una prueba local no acredita la entrega.
+
+La desinstalación conserva las tablas de bajas para no reactivar envíos por accidente.
+
+La prueba de correo de PrestaShop no ejecuta los hooks normales. La versión 1.1.1 instala una sobreescritura de Mail::sendMailTest que añade obligatoriamente List-Unsubscribe y List-Unsubscribe-Post antes de la firma DKIM. Si las sobreescrituras están desactivadas, el módulo no permite la instalación porque esa garantía no podría cumplirse.
+
+La pestaña Plantillas muestra dos columnas con buscador. «NO» contiene pedidos, pagos, facturas, envíos, contraseñas, soporte y otros mensajes transaccionales. «SÍ» contiene boletines, promociones y el resto de plantillas habilitadas. Se recorren todos los idiomas del núcleo, el tema activo y todos los módulos; cualquier plantilla nueva se añade automáticamente y, si no se reconoce como transaccional, queda activada.
+
 ## Qué hace
 
 | | |
